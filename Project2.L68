@@ -1,0 +1,244 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 02/03/2022 15:56:48
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8      
+00001000  =00000000                  9  EXIT        EQU 0      USED TO EXIT ASSEMBLY PROGRAM
+00001000  =00000002                 10  OWNED_POTIONS EQU 2      MIN NUMBER OF POTIONS
+00001000  =00000001                 11  OWNED_WEAPONS EQU 1      MIN WEAPON LEVEL
+00001000  =00000005                 12  MAX_WEAPON    EQU 5      MAX WEAPON LEVEL
+00001000  =00000000                 13  MONEY_AMOUNT  EQU 0     AMOUNT OF MONEY IN PLAYER'S POSSESSION
+00001000  =0000000A                 14  POTION_PRICE EQU 10     PRICE OF POTION IN SHOP
+00001000  =00000032                 15  WEAPON_PRICE EQU 50     PRICE OF WEAPON UPGRADE IN SHOP
+00001000  =0000004B                 16  ENEMY_HEALTH EQU 75
+00001000  =00000064                 17  HEALTH       EQU 100
+00001000  =00000064                 18  MINE_LOC    EQU 100    USED BELOW FOR SOME SIMPLE COLLISION DETECTION USING CMP
+00001000  =00000019                 19  DAMAGE      EQU 25
+00001000                            20  
+00001000                            21  *START OF GAME
+00001000                            22  START:                  
+00001000  11FC 004B 4040            23      MOVE.B  #ENEMY_HEALTH,$4040
+00001006  45F8 4040                 24      LEA     $4040,A2
+0000100A  11FC 0002 4000            25      MOVE.B  #OWNED_POTIONS,$4000 PUT POTION AMOUNT IN MEMORY LOCATION $4000
+00001010  47F8 4000                 26      LEA     $4000,A3   ASSIGN ADDRESS A3 TO THAT MEMORY LOCATION
+00001014  11FC 0064 4010            27      MOVE.B  #HEALTH,$4010
+0000101A  49F8 4010                 28      LEA     $4010,A4
+0000101E  11FC 0001 4020            29      MOVE.B  #OWNED_WEAPONS,$4020 PUT WEAPON LEVEL IN MEMORY LOCATION $4008
+00001024  4BF8 4020                 30      LEA     $4020,A5   ASSIGN ADDRESS A4 TO THAT MEMORY LOCATION
+00001028  11FC 0000 4026            31      MOVE.B  #MONEY_AMOUNT,$4026
+0000102E  4DF8 4026                 32      LEA     $4026,A6
+00001032                            33  
+00001032                            34      
+00001032  11FC 000A 4036            35      MOVE.B  #POTION_PRICE,$4036
+00001038                            36      
+00001038                            37  
+00001038  6100 1FD0                 38      BSR     WELCOME    BRANCH TO THE WELCOME SUBROUTINE
+0000103C                            39  *    BSR     INPUT      BRANCH TO THE INPUT SUBROUTINE
+0000103C  6100 1FC2                 40      BSR     GAME_SUBROUTINE       BRANCH TO THE GAME SUBROUTINE
+00001040                            41  
+00001040                            42  *GAME LOOP
+00003000                            43      ORG     $3000      THE REST OF THE PROGRAM IS TO BE LOCATED FROM 3000 ONWARDS
+00003000                            44  
+00003000                            45  *-------------------------------------------------------
+00003000                            46  *-------------------GAME SUBROUTINE---------------------
+00003000                            47  *-------------------------------------------------------
+00003000                            48  GAME_SUBROUTINE:
+00003000  6100 0026                 49      BSR     GAMELOOP   BRANCH TO GAMELOOP SUBROUTINE
+00003004  4E75                      50      RTS                RETURN FROM GAME: SUBROUTINE
+00003006                            51            
+00003006                            52  END:
+00003006                            53  
+00003006  FFFF FFFF                 54      SIMHALT    
+0000300A                            55  
+0000300A                            56  *-------------------------------------------------------
+0000300A                            57  *-------------------WELCOME SUBROUTINE------------------
+0000300A                            58  *-------------------------------------------------------
+0000300A                            59  WELCOME:
+0000300A  6100 00B0                 60      BSR     endl            BRANCH TO ENDL SUBROUTINE
+0000300E  43F9 000030D5             61      LEA     WELCOME_MSG,A1  ASSIGN MESSAGE TO ADDRESS REGISTER A1
+00003014  103C 000E                 62      MOVE.B  #14,D0          MOVE LITERAL 14 TO DO
+00003018  4E4F                      63      TRAP    #15             TRAP AND INTERPRET VALUE IN D0
+0000301A  43F9 00003268             64      LEA     INSTRUCT_MSG,A1
+00003020  103C 000E                 65      MOVE.B  #14,D0
+00003024  4E4F                      66      TRAP    #15
+00003026                            67  
+00003026  4E75                      68      RTS                     RETURN FROM WELCOME: SUBROUTINE
+00003028                            69      
+00003028                            70     
+00003028                            71  *-------------------------------------------------------
+00003028                            72  *-----------------------GAMELOOP------------------------
+00003028                            73  *------------------------------------------------------- 
+00003028                            74  GAMELOOP:
+00003028  6100 0092                 75      BSR     QUEST_INFO 
+0000302C                            76  
+0000302C                            77  
+0000302C                            78  
+0000302C                            79  MENU:
+0000302C  43F9 00003381             80      LEA MESSAGE, A1
+00003032  103C 000E                 81      MOVE.B #14, D0
+00003036  4E4F                      82      TRAP #15
+00003038                            83      
+00003038  303C 0004                 84      MOVE #4, D0
+0000303C  4E4F                      85      TRAP #15
+0000303E                            86      
+0000303E  B27C 0001                 87      CMP #1, D1 # COMPARE WITH 1
+00003042  6DE8                      88      BLT MENU
+00003044  B27C 0004                 89      CMP #4, D1 # COMPARE WITH 3
+00003048  6EE2                      90      BGT MENU
+0000304A  6000 0002                 91      BRA CHOICE
+0000304E                            92      
+0000304E                            93  CHOICE:
+0000304E                            94      * PLEASE COMPLETE CHOICE AS IN FLOW CHART
+0000304E                            95      * NEED TO CHECK IF THE NUMBER IS EXACTLY 1 AND GOTO METHOD BUY_TREES
+0000304E                            96      * OR ELSE SHOW THE MENU AGAIN
+0000304E  B27C 0001                 97      CMP #1, D1
+00003052  6700 001C                 98      BEQ PURCHASE_TREES
+00003056                            99      
+00003056  B27C 0002                100      CMP #2, D1
+0000305A  6700 0024                101      BEQ HARVEST_TREES
+0000305E                           102      
+0000305E  B27C 0003                103      CMP #3, D1
+00003062  6700 002C                104      BEQ PURCHASE_WINDMILLS
+00003066                           105      
+00003066  B27C 0004                106      CMP #4, D1
+0000306A  6700 0034                107      BEQ PURCHASE_SOLAR_PANELS
+0000306E                           108      
+0000306E  60BC                     109      BRA MENU
+00003070                           110      
+00003070                           111  PURCHASE_TREES:
+00003070  43F9 000033C8            112      LEA TREES, A1
+00003076  103C 000E                113      MOVE.B #14, D0
+0000307A  4E4F                     114      TRAP #15
+0000307C                           115      
+0000307C  6000 0032                116      BRA GAME
+00003080                           117      
+00003080                           118  HARVEST_TREES:
+00003080  43F9 000033EF            119      LEA HARVEST, A1
+00003086  103C 000E                120      MOVE.B #14, D0
+0000308A  4E4F                     121      TRAP #15
+0000308C                           122      
+0000308C  6000 0022                123      BRA GAME
+00003090                           124   
+00003090                           125  PURCHASE_WINDMILLS:
+00003090  43F9 0000341A            126      LEA WINDMILL, A1
+00003096  103C 000E                127      MOVE.B #14, D0
+0000309A  4E4F                     128      TRAP #15
+0000309C                           129      
+0000309C  6000 0012                130      BRA GAME
+000030A0                           131      
+000030A0                           132  PURCHASE_SOLAR_PANELS:
+000030A0  43F9 00003445            133      LEA SOLAR, A1
+000030A6  103C 000E                134      MOVE.B #14, D0
+000030AA  4E4F                     135      TRAP #15
+000030AC                           136      
+000030AC  6000 0002                137      BRA GAME
+000030B0                           138  
+000030B0                           139      
+000030B0                           140  GAME:
+000030B0  43F9 00003473            141      LEA GAME_MESSAGE, A1
+000030B6  103C 000E                142      MOVE.B #14, D0
+000030BA  4E4F                     143      TRAP #15      
+000030BC                           144  
+000030BC                           145  *-------------------------------------------------------
+000030BC                           146  *---------------------------QUEST_INFO------------------
+000030BC                           147  *------------------------------------------------------- 
+000030BC                           148  QUEST_INFO
+000030BC                           149  
+000030BC                           150  
+000030BC                           151  endl:
+000030BC  48E7 8040                152      MOVEM.L D0/A1,-(A7)
+000030C0  303C 000E                153      MOVE    #14,D0
+000030C4  43F9 000030D2            154      LEA     CRLF,A1
+000030CA  4E4F                     155      TRAP    #15
+000030CC  4CDF 0201                156      MOVEM.L (A7)+,D0/A1
+000030D0  4E75                     157      RTS
+000030D2                           158     
+000030D2                           159  
+000030D2                           160  *-------------------------------------------------------
+000030D2                           161  *-------------------DATA DELARATIONS--------------------
+000030D2                           162  *-------------------------------------------------------
+000030D2                           163  
+000030D2= 0D 0A 00                 164  CRLF:           DC.B    $0D,$0A,0
+000030D5= 2A 2A 2A 2A 2A 2A ...    165  WELCOME_MSG:    DC.B    '********************************************************************************'
+00003125= 0D 0A                    166                  DC.B    $0D,$0A
+00003127= 59 6F 75 20 61 72 ...    167                  DC.B    'You are the chosen one! You are the only person that can save the earth' 
+0000316E= 0D 0A                    168                  DC.B    $0D,$0A
+00003170= 66 72 6F 6D 20 47 ...    169                  DC.B    'from Global Warming. Do not let us down !!!'
+0000319B= 0D 0A                    170                  DC.B    $0D,$0A
+0000319D= 54 68 65 73 65 20 ...    171                  DC.B    'These monsters have sprung out of nowhere... They have taken our land and money'
+000031EC= 0D 0A                    172                  DC.B    $0D,$0A
+000031EE= 61 6E 64 20 69 74 ...    173                  DC.B    'and it is time for these monsters to suffer the consequences !!!'
+0000322E= 0D 0A                    174                  DC.B    $0D,$0A
+00003230= 49 74 20 69 73 20 ...    175                  DC.B    'It is time for you to show us what you are made of.'
+00003263= 0D 0A                    176                  DC.B    $0D,$0A
+00003265= 0D 0A 00                 177                  DC.B    $0D,$0A,0
+00003268= 59 6F 75 72 20 6D ...    178  INSTRUCT_MSG:   DC.B    'Your mission is straightforward. Complete the quests to earn yourself some'
+000032B2= 0D 0A                    179                  DC.B    $0D,$0A
+000032B4= 67 6F 6C 64 2E 20 ...    180                  DC.B    'gold. Afterwards you can go to the shop and buy some windmills or solar'
+000032FB= 0D 0A                    181                  DC.B    $0D,$0A
+000032FD= 70 61 6E 65 6C 73 ...    182                  DC.B    'panels to save the earth from global warming.'
+0000332A= 0D 0A                    183                  DC.B    $0D,$0A
+0000332C= 2A 2A 2A 2A 2A 2A ...    184                  DC.B    '********************************************************************************'
+0000337C= 0D 0A                    185                  DC.B    $0D,$0A
+0000337E= 0D 0A 00                 186                  DC.B    $0D,$0A,0
+00003381                           187                  
+00003381= 28 31 29 20 42 55 ...    188  MESSAGE DC.B '(1) BUY TREES, (2) HARVEST, (3) BUY WINDMILLS, (4) BUY SOLAR PANELS : ', 0
+000033C8                           189  
+000033C8= 48 4F 57 20 4D 41 ...    190  TREES DC.B 'HOW MANY TREES WOULD YOU LIKE TO BUY? ', 0
+000033EF= 48 4F 57 20 4D 41 ...    191  HARVEST DC.B 'HOW MANY TREES WOULD YOU LIKE TO HARVEST? ', 0
+0000341A= 48 4F 57 20 4D 41 ...    192  WINDMILL DC.B 'HOW MANY WINDMILLS WOULD YOU LIKE TO BUY? ', 0
+00003445= 48 4F 57 20 4D 41 ...    193  SOLAR DC.B 'HOW MANY SOLAR PANELS WOULD YOU LIKE TO BUY? ', 0
+00003473                           194  
+00003473= 52 45 53 54 20 4F ...    195  GAME_MESSAGE DC.B 'REST OF GAME HERE: ', 0
+00003487                           196  
+00003487                           197  
+00003487                           198      END    START       
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CHOICE              304E
+CRLF                30D2
+DAMAGE              19
+END                 3006
+ENDL                30BC
+ENEMY_HEALTH        4B
+EXIT                0
+GAME                30B0
+GAMELOOP            3028
+GAME_MESSAGE        3473
+GAME_SUBROUTINE     3000
+HARVEST             33EF
+HARVEST_TREES       3080
+HEALTH              64
+INSTRUCT_MSG        3268
+MAX_WEAPON          5
+MENU                302C
+MESSAGE             3381
+MINE_LOC            64
+MONEY_AMOUNT        0
+OWNED_POTIONS       2
+OWNED_WEAPONS       1
+POTION_PRICE        A
+PURCHASE_SOLAR_PANELS  30A0
+PURCHASE_TREES      3070
+PURCHASE_WINDMILLS  3090
+QUEST_INFO          30BC
+SOLAR               3445
+START               1000
+TREES               33C8
+WEAPON_PRICE        32
+WELCOME             300A
+WELCOME_MSG         30D5
+WINDMILL            341A
