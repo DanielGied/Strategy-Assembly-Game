@@ -22,7 +22,7 @@ MAX_WEAPON          EQU 3     MAX WEAPON LEVEL
 WINDMILL_AMOUNT     EQU 1     AMOUNT OF WINDMILLS IN PLAYER'S POSSESSION
 SOLARPANEL_AMOUNT   EQU 1     AMOUNT OF SOLAR PANELS IN PLAYER'S POSSESSION
 TREES_AMOUNT        EQU 15    AMOUNT OF TREES IN PLAYER'S POSSESSION
-GOLD_AMOUNT         EQU 0     AMOUNT OF MONEY IN PLAYER'S POSSESSION
+GOLD_AMOUNT         EQU 0     AMOUNT OF GOLD IN PLAYER'S POSSESSION
 POTION_PRICE        EQU 10    PRICE OF POTION IN SHOP
 WEAPON_PRICE        EQU 100   PRICE OF WEAPON UPGRADE IN SHOP
 WINDMILL_PRICE      EQU 100   PRICE OF WINDMILL IN SHOP
@@ -44,7 +44,7 @@ START:
     LEA     $4010,A4             ASSIGN ADDRESS A4 TO THAT MEMORY LOCATION
     MOVE.B  #OWNED_WEAPONS,$4014 PUT WEAPON LEVEL IN MEMORY LOCATION $4014
     LEA     $4014,A5             ASSIGN ADDRESS A5 TO THAT MEMORY LOCATION
-    MOVE.B  #GOLD_AMOUNT,$4022  PUT MONEY IN MEMORY LOCATION $4022
+    MOVE.B  #GOLD_AMOUNT,$4022   PUT GOLD IN MEMORY LOCATION $4022
     LEA     $4022,A6             ASSIGN ADDRESS A6 TO THAT MEMORY LOCATION
     MOVE.B  #WINDMILL_AMOUNT,$4048      PUT WINDMILL IN MEMORY LOCATION $4048
     MOVE.B  $4048,4048
@@ -93,7 +93,7 @@ INPUT:
     BSR     WINDMILL        BRANCH TO WINDMILL INPUT SUBROUTINE
     BSR     SOLAR_PANEL     BRANCH TO SOLAR PANEL INPUT SUBROUTINE
     BSR     TREES           BRANCH TO TREES INPUT SUBROUTINE
-    BSR     GOLD            BRANCH TO MONEY INPUT SUBROUTINE
+    BSR     GOLD            BRANCH TO GOLD INPUT SUBROUTINE
     BSR     SHOW_HEALTH     BRANCH TO HEALTH INPUT SUBROUTINE
     BSR     POTIONS         BRANCH TO POTION INPUT SUBROUTINE
     BSR     PROMPT          BRANCH TO WEAPONS INPUT SUBROUTINE
@@ -135,13 +135,13 @@ PLAYER_TURN:
     BLT     WIN_FIGHT
     CMP     #1,(A4)
     BLT     LOSE_FIGHT
-    LEA     USERTURN_MSG,A1
+    LEA     PLAYERTURN_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  #4,D0   
     TRAP    #15
     
-    MOVE    D1,D0   GETS INPUT FROM PLAYER AND LETA CHOOSE OPTION
+    MOVE    D1,D0   GETS INPUT FROM PLAYER AND LET CHOOSE OPTION
     CMP     #1,D1
     BNE     NEXT_CHOICE   IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
     BSR     DECORATE  
@@ -248,9 +248,7 @@ WINDMILL:
     TRAP    #15
     BSR     ENDL
     RTS
-
-
-    
+  
 *-------------------------------------------------------
 *--------------------Solar Panel display----------------
 *-------------------------------------------------------
@@ -468,6 +466,7 @@ SHOP_MESSAGE:
     BSR     WEAPONS           
     BSR     SHOP_MESSAGE
     RTS
+    
 WEAPON_ITEM:
     CMP     #2,D1
     BNE     WINDMILL_ITEM
@@ -600,7 +599,6 @@ ADD_WEAPON:
     BSR     WEAPONS
     BSR     ENDL
     BSR     SHOP_MESSAGE
-
     RTS
     
 ADD_WINDMILL:
@@ -667,7 +665,7 @@ WELCOME_MSG:    DC.B    '*******************************************************
                 DC.B    $0D,$0A
                 DC.B    'These monsters have sprung out of nowhere... They have destroyed our land, taken'
                 DC.B    $0D,$0A
-                DC.B    'our money and it is time for these monsters to suffer the consequences !!!'
+                DC.B    'our gold and it is time for these monsters to suffer the consequences !!!'
                 DC.B    $0D,$0A
                 DC.B    'It is time for you to show us what you are made of.'
                 DC.B    $0D,$0A
@@ -692,7 +690,7 @@ TREES_MSG       DC.B    'Trees owned:',0
 *-------------------CHARACTER--------------------------
 POTIONS_MSG:    DC.B    'Potions owned:',0                
 WEAPONS_MSG:    DC.B    'Current Weapon Level:',0
-GOLD_MSG:      DC.B     'Gold in your pouch:',0
+GOLD_MSG:       DC.B    'Gold in your pouch:',0
 HEALTH_MSG:     DC.B    'Health:',0
 *------------------------------------------------------
 
@@ -704,7 +702,7 @@ PRESS_ENTER:    DC.B    $0D,$0A
                 DC.B    'Press enter to continue'
                 DC.B    $0D,$0A,0
 GAMEPLAY_MSG:   DC.B    'The Mini boss used earthquake',0
-USERTURN_MSG:   DC.B    'What do you want to do?'
+PLAYERTURN_MSG: DC.B    'What do you want to do?'
                 DC.B    $0D,$0A
                 DC.B    '1 - Attack!  2 - Heal thyself!'
                 DC.B    $0D,$0A,0
@@ -761,9 +759,9 @@ MAX_UPGRADE:    DC.B    'You have reached the max level for your weapon'
                 DC.B    $0D,$0A
                 DC.B    $0D,$0A,0
                 
-*------------------------------------------------------------------------------------- 
+*------------------------------------------------------- 
 
-*------------------Promt for not enough money for certain item------------------------
+*------Promt for not enough money for certain item------
 NO_MONEY_POTION:      DC.B    $0D,$0A
                       DC.B    'Not enough gold to purchase Potion'
                       DC.B    $0D,$0A,0
@@ -779,10 +777,11 @@ NO_MONEY_SOLARPANEL:  DC.B    $0D,$0A
 NO_MONEY_TREES:       DC.B    $0D,$0A
                       DC.B    'Not enough gold to purchase Tree'
                       DC.B    $0D,$0A,0
-*-----------------------------------------------------------------------------------                     
+*-------------------------------------------------------                   
                         
 
     END START
+
 
 
 
