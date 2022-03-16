@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 3/16/2022 10:51:33 PM
+Created On: 3/16/2022 11:15:08 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Project I
@@ -26,7 +26,7 @@ Created On: 3/16/2022 10:51:33 PM
 00001000  =00000001                 22  WINDMILL_AMOUNT     EQU 1     AMOUNT OF WINDMILLS IN PLAYER'S POSSESSION
 00001000  =00000001                 23  SOLARPANEL_AMOUNT   EQU 1     AMOUNT OF SOLAR PANELS IN PLAYER'S POSSESSION
 00001000  =0000000F                 24  TREES_AMOUNT        EQU 15    AMOUNT OF TREES IN PLAYER'S POSSESSION
-00001000  =00000000                 25  GOLD_AMOUNT         EQU 0     AMOUNT OF GOLD IN PLAYER'S POSSESSION
+00001000  =00000064                 25  GOLD_AMOUNT         EQU 100     AMOUNT OF GOLD IN PLAYER'S POSSESSION
 00001000  =0000000A                 26  POTION_PRICE        EQU 10    PRICE OF POTION IN SHOP
 00001000  =00000064                 27  WEAPON_PRICE        EQU 100   PRICE OF WEAPON UPGRADE IN SHOP
 00001000  =00000064                 28  WINDMILL_PRICE      EQU 100   PRICE OF WINDMILL IN SHOP
@@ -40,151 +40,151 @@ Created On: 3/16/2022 10:51:33 PM
 00001000                            36  
 00001000                            37  *THE GAME BEGINS HERE
 00001000                            38  START:
-00001000  11FC 0050 4038            39      MOVE.B  #ENEMY_HEALTH,$4038  PUT ENEMY HEALTH IN MEMORY LOCATION $4038
-00001006  45F8 4038                 40      LEA     $4038,A2             ASSIGN ADDRESS A2 TO THAT MEMORY LOCATION
-0000100A  11FC 0005 4000            41      MOVE.B  #OWNED_POTIONS,$4000 PUT POTION AMOUNT IN MEMORY LOCATION $4000
-00001010  47F8 4000                 42      LEA     $4000,A3             ASSIGN ADDRESS A3 TO THAT MEMORY LOCATION
-00001014  11FC 0064 4010            43      MOVE.B  #HEALTH,$4010        PUT HEALTH IN MEMORY LOCATION $4010
-0000101A  49F8 4010                 44      LEA     $4010,A4             ASSIGN ADDRESS A4 TO THAT MEMORY LOCATION
-0000101E  11FC 0001 4014            45      MOVE.B  #OWNED_WEAPONS,$4014 PUT WEAPON LEVEL IN MEMORY LOCATION $4014
-00001024  4BF8 4014                 46      LEA     $4014,A5             ASSIGN ADDRESS A5 TO THAT MEMORY LOCATION
-00001028  11FC 0000 4022            47      MOVE.B  #GOLD_AMOUNT,$4022   PUT GOLD IN MEMORY LOCATION $4022
-0000102E  4DF8 4022                 48      LEA     $4022,A6             ASSIGN ADDRESS A6 TO THAT MEMORY LOCATION
-00001032  11FC 0001 4048            49      MOVE.B  #WINDMILL_AMOUNT,$4048      PUT WINDMILL IN MEMORY LOCATION $4048
+00001000  11FC 0050 4038            39      MOVE.B  #ENEMY_HEALTH,$4038        PUT ENEMY HEALTH IN MEMORY LOCATION $4038
+00001006  45F8 4038                 40      LEA     $4038,A2                   ASSIGN ADDRESS A2 TO THAT MEMORY LOCATION
+0000100A  11FC 0005 4000            41      MOVE.B  #OWNED_POTIONS,$4000       PUT POTION AMOUNT IN MEMORY LOCATION $4000
+00001010  47F8 4000                 42      LEA     $4000,A3                   ASSIGN ADDRESS A3 TO THAT MEMORY LOCATION
+00001014  11FC 0064 4010            43      MOVE.B  #HEALTH,$4010              PUT HEALTH IN MEMORY LOCATION $4010
+0000101A  49F8 4010                 44      LEA     $4010,A4                   ASSIGN ADDRESS A4 TO THAT MEMORY LOCATION
+0000101E  11FC 0001 4014            45      MOVE.B  #OWNED_WEAPONS,$4014       PUT WEAPON LEVEL IN MEMORY LOCATION $4014
+00001024  4BF8 4014                 46      LEA     $4014,A5                   ASSIGN ADDRESS A5 TO THAT MEMORY LOCATION
+00001028  11FC 0064 4022            47      MOVE.B  #GOLD_AMOUNT,$4022         PUT GOLD IN MEMORY LOCATION $4022
+0000102E  4DF8 4022                 48      LEA     $4022,A6                   ASSIGN ADDRESS A6 TO THAT MEMORY LOCATION
+00001032  11FC 0001 4048            49      MOVE.B  #WINDMILL_AMOUNT,$4048     PUT WINDMILL IN MEMORY LOCATION $4048
 00001038  11F8 4048 0FD0            50      MOVE.B  $4048,4048
-0000103E  11FC 0001 4058            51      MOVE.B  #SOLARPANEL_AMOUNT,$4058    PUT SOLAR PANEL IN MEMORY LOCATION $4058
+0000103E  11FC 0001 4058            51      MOVE.B  #SOLARPANEL_AMOUNT,$4058   PUT SOLAR PANEL IN MEMORY LOCATION $4058
 00001044  11F8 4058 0FDA            52      MOVE.B  $4058,4058
-0000104A  11FC 000F 4068            53      MOVE.B  #TREES_AMOUNT,$4068         PUT TREES IN MEMORY LOCATION $4068
+0000104A  11FC 000F 4068            53      MOVE.B  #TREES_AMOUNT,$4068        PUT TREES IN MEMORY LOCATION $4068
 00001050  11F8 4068 0FE4            54      MOVE.B  $4068,4068
 00001056                            55  
-00001056  11FC 000A 4032            56      MOVE.B  #POTION_PRICE,$4032         PUT POTION PRICE IN MEMORY LOCATION $4032
-0000105C                            57  
-0000105C  6100 1FAC                 58      BSR     WELCOME    BRANCH TO THE WELCOME SUBROUTINE
-00001060  6100 1FC6                 59      BSR     INPUT      BRANCH TO THE INPUT SUBROUTINE
-00001064  6100 1F9A                 60      BSR     GAME       BRANCH TO THE GAME SUBROUTINE
-00001068                            61      
-00001068                            62  *GAME LOOP
-00003000                            63      ORG     $3000      THE REST OF THE PROGRAM IS TO BE LOCATED FROM 3000 ONWARDS
-00003000                            64  
-00003000                            65  *-------------------------------------------------------
-00003000                            66  *-------------------GAME SUBROUTINE---------------------
-00003000                            67  *-------------------------------------------------------
-00003000                            68  GAME:
-00003000  6100 0044                 69      BSR     GAMELOOP   BRANCH TO GAMELOOP SUBROUTINE
-00003004  4E75                      70      RTS                RETURN FROM GAME: SUBROUTINE
-00003006                            71            
-00003006                            72  END:
-00003006  FFFF FFFF                 73      SIMHALT
-0000300A                            74  
-0000300A                            75  *-------------------------------------------------------
-0000300A                            76  *-------------------WELCOME SUBROUTINE------------------
-0000300A                            77  *-------------------------------------------------------
-0000300A                            78  WELCOME:
-0000300A  6100 034E                 79      BSR     ENDL            BRANCH TO ENDL SUBROUTINE
-0000300E  43F9 00003643             80      LEA     WELCOME_MSG,A1  ASSIGN MESSAGE TO ADDRESS REGISTER A1
-00003014  103C 000E                 81      MOVE.B  #14,D0          MOVE LITERAL 14 TO DO
-00003018  4E4F                      82      TRAP    #15             TRAP AND INTERPRET VALUE IN D0
-0000301A  43F9 000037E0             83      LEA     TO_DO_MSG,A1
-00003020  103C 000E                 84      MOVE.B  #14,D0
-00003024  4E4F                      85      TRAP    #15
-00003026                            86  
-00003026  4E75                      87      RTS                     RETURN FROM WELCOME: SUBROUTINE
-00003028                            88  
-00003028                            89  *-------------------------------------------------------
-00003028                            90  *---------GAMEPLAY INPUT VALUES SUBROUTINE--------------
-00003028                            91  *-------------------------------------------------------    
-00003028                            92  INPUT:
-00003028  6100 0180                 93      BSR     WINDMILL        BRANCH TO WINDMILL INPUT SUBROUTINE
-0000302C  6100 019C                 94      BSR     SOLAR_PANEL     BRANCH TO SOLAR PANEL INPUT SUBROUTINE
-00003030  6100 01B8                 95      BSR     TREES           BRANCH TO TREES INPUT SUBROUTINE
-00003034  6100 0156                 96      BSR     GOLD            BRANCH TO GOLD INPUT SUBROUTINE
-00003038  6100 01EE                 97      BSR     SHOW_HEALTH     BRANCH TO HEALTH INPUT SUBROUTINE
-0000303C  6100 01CC                 98      BSR     POTIONS         BRANCH TO POTION INPUT SUBROUTINE
-00003040  6100 0114                 99      BSR     PROMPT          BRANCH TO WEAPONS INPUT SUBROUTINE
-00003044  4E75                     100      RTS
-00003046                           101  
-00003046                           102  *-------------------------------------------------------
-00003046                           103  *----------------------GAMELOOP-------------------------
-00003046                           104  *------------------------------------------------------- 
-00003046                           105  GAMELOOP:
-00003046  6100 0018                106      BSR     QUEST_INFO      BRANCH TO UPDATE GAME SUBROUTINE        
-0000304A  6100 002E                107      BSR     PLAYER_TURN     BRANCH TO PLAYER TURN SUBROUTINE
-0000304E  6100 01F6                108      BSR     ENEMY_TURN      BRANCH TO ENEMY_TURN SUBROUTINE
-00003052  6100 0026                109      BSR     PLAYER_TURN     BRANCH TO PLAYER TURN SUBROUTINE
-00003056  6100 01EE                110      BSR     ENEMY_TURN      BRANCH TO ENEMY_TURN SUBROUTINE
-0000305A  6100 02DC                111      BSR     REPLAY          BRANCH TO REPLAY GAME SUBROUTINE
-0000305E  4E75                     112      RTS                     RETURN FROM GAMELOOP: SUBROUTINE
-00003060                           113  
-00003060                           114  *-------------------------------------------------------
-00003060                           115  *---------------------QUEST_INFO------------------------
-00003060                           116  *------------------------------------------------------- 
-00003060                           117  QUEST_INFO
-00003060  6100 02F8                118      BSR     ENDL            PRINT A CR AND LF
-00003064  6100 02B4                119      BSR     DECORATE        DECORATE WITH DOTS USING A LOOP
-00003068  43F9 00003973            120      LEA     MISSION_MSG,A1   
-0000306E  103C 000E                121      MOVE.B  #14,D0
-00003072  4E4F                     122      TRAP    #15
-00003074  6100 02A4                123      BSR     DECORATE
-00003078  4E75                     124      RTS
-0000307A                           125      
-0000307A                           126  *-------------------------------------------------------
-0000307A                           127  *-----------------PLAYER FIGHTING OPTIONS----------------
-0000307A                           128  *-------------------------------------------------------- 
-0000307A                           129  PLAYER_TURN:
-0000307A  6100 02DE                130      BSR     ENDL
-0000307E  6100 01A8                131      BSR     SHOW_HEALTH
-00003082  6100 0186                132      BSR     POTIONS
-00003086  6100 0292                133      BSR     DECORATE
-0000308A  0C52 0001                134      CMP     #1,(A2)
-0000308E  6D00 024A                135      BLT     WIN_FIGHT
-00003092  0C54 0001                136      CMP     #1,(A4)
-00003096  6D00 026C                137      BLT     LOSE_FIGHT
-0000309A  43F9 00003A11            138      LEA     PLAYERTURN_MSG,A1
-000030A0  103C 000E                139      MOVE.B  #14,D0
-000030A4  4E4F                     140      TRAP    #15
-000030A6  103C 0004                141      MOVE.B  #4,D0   
-000030AA  4E4F                     142      TRAP    #15
-000030AC                           143      
-000030AC  3001                     144      MOVE    D1,D0   GETS INPUT FROM PLAYER AND LET CHOOSE OPTION
-000030AE  B27C 0001                145      CMP     #1,D1
-000030B2  6600 000C                146      BNE     NEXT_CHOICE   IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
-000030B6  6100 0262                147      BSR     DECORATE  
-000030BA  6100 01C2                148      BSR     COLLISION   
-000030BE  4E75                     149      RTS
-000030C0                           150  
-000030C0                           151  NEXT_CHOICE:
-000030C0  B27C 0002                152      CMP     #2,D1
-000030C4  6600 005C                153      BNE     WRONG_CHOICE
-000030C8  1C13                     154      MOVE.B  (A3),D6
-000030CA  BC7C 0001                155      CMP     #1,D6
-000030CE  6C00 0012                156      BGE     MINUS_POTION
-000030D2  43F9 00003AEF            157      LEA     ZEROPOTION_MSG,A1
-000030D8  103C 000E                158      MOVE.B  #14,D0
-000030DC  4E4F                     159      TRAP    #15
-000030DE  619A                     160      BSR     PLAYER_TURN
-000030E0  4E75                     161      RTS
-000030E2                           162      
-000030E2                           163  MINUS_POTION:
-000030E2  1E14                     164      MOVE.B  (A4),D7
-000030E4  BE7C 0064                165      CMP     #100,D7
-000030E8  6C00 0022                166      BGE     CANT_USE_POTION
-000030EC  43F9 00003AC4            167      LEA     USE_POTION,A1
-000030F2  103C 000E                168      MOVE.B  #14,D0
-000030F6  4E4F                     169      TRAP    #15
-000030F8  6100 0220                170      BSR     DECORATE
-000030FC  5313                     171      SUB.B   #1,(A3)
-000030FE  0614 003C                172      ADD.B   #60,(A4)
-00003102  6100 0124                173      BSR     SHOW_HEALTH
-00003106  6100 0102                174      BSR     POTIONS
-0000310A  4E75                     175      RTS
-0000310C                           176     
-0000310C                           177  CANT_USE_POTION:
-0000310C  43F9 00003A9B            178      LEA     FULL_HEALTH,A1
-00003112  103C 000E                179      MOVE.B  #14,D0
-00003116  4E4F                     180      TRAP    #15
-00003118  6100 0200                181      BSR     DECORATE 
-0000311C  6100 FF5C                182      BSR     PLAYER_TURN
-00003120  4E75                     183      RTS 
+00001056                            56  
+00001056  6100 1FB2                 57      BSR     WELCOME    BRANCH TO THE WELCOME SUBROUTINE
+0000105A  6100 1FCC                 58      BSR     INPUT      BRANCH TO THE INPUT SUBROUTINE
+0000105E  6100 1FA0                 59      BSR     GAME       BRANCH TO THE GAME SUBROUTINE
+00001062                            60      
+00001062                            61  *GAME LOOP
+00003000                            62      ORG     $3000      THE REST OF THE PROGRAM IS TO BE LOCATED FROM 3000 ONWARDS
+00003000                            63  
+00003000                            64  *-------------------------------------------------------
+00003000                            65  *-------------------GAME SUBROUTINE---------------------
+00003000                            66  *-------------------------------------------------------
+00003000                            67  GAME:
+00003000  6100 0044                 68      BSR     GAMELOOP   BRANCH TO GAMELOOP SUBROUTINE
+00003004  4E75                      69      RTS                RETURN FROM GAME: SUBROUTINE
+00003006                            70            
+00003006                            71  END:
+00003006  FFFF FFFF                 72      SIMHALT
+0000300A                            73  
+0000300A                            74  *-------------------------------------------------------
+0000300A                            75  *-------------------WELCOME SUBROUTINE------------------
+0000300A                            76  *-------------------------------------------------------
+0000300A                            77  WELCOME:
+0000300A  6100 034E                 78      BSR     ENDL            BRANCH TO ENDL SUBROUTINE
+0000300E  43F9 00003643             79      LEA     WELCOME_MSG,A1  ASSIGN MESSAGE TO ADDRESS REGISTER A1
+00003014  103C 000E                 80      MOVE.B  #14,D0          MOVE LITERAL 14 TO DO
+00003018  4E4F                      81      TRAP    #15             TRAP AND INTERPRET VALUE IN D0
+0000301A  43F9 000037E0             82      LEA     TO_DO_MSG,A1
+00003020  103C 000E                 83      MOVE.B  #14,D0
+00003024  4E4F                      84      TRAP    #15
+00003026                            85  
+00003026  4E75                      86      RTS                     RETURN FROM WELCOME: SUBROUTINE
+00003028                            87  
+00003028                            88  *-------------------------------------------------------
+00003028                            89  *---------GAMEPLAY INPUT VALUES SUBROUTINE--------------
+00003028                            90  *-------------------------------------------------------    
+00003028                            91  INPUT:
+00003028  6100 0180                 92      BSR     WINDMILL        BRANCH TO WINDMILL INPUT SUBROUTINE
+0000302C  6100 019C                 93      BSR     SOLAR_PANEL     BRANCH TO SOLAR PANEL INPUT SUBROUTINE
+00003030  6100 01B8                 94      BSR     TREES           BRANCH TO TREES INPUT SUBROUTINE
+00003034  6100 0156                 95      BSR     GOLD            BRANCH TO GOLD INPUT SUBROUTINE
+00003038  6100 01EE                 96      BSR     SHOW_HEALTH     BRANCH TO HEALTH INPUT SUBROUTINE
+0000303C  6100 01CC                 97      BSR     POTIONS         BRANCH TO POTION INPUT SUBROUTINE
+00003040  6100 0114                 98      BSR     PROMPT          BRANCH TO WEAPONS INPUT SUBROUTINE
+00003044  4E75                      99      RTS
+00003046                           100  
+00003046                           101  *-------------------------------------------------------
+00003046                           102  *----------------------GAMELOOP-------------------------
+00003046                           103  *------------------------------------------------------- 
+00003046                           104  GAMELOOP:
+00003046  6100 0018                105      BSR     QUEST_INFO      BRANCH TO UPDATE GAME SUBROUTINE        
+0000304A  6100 002E                106      BSR     PLAYER_TURN     BRANCH TO PLAYER TURN SUBROUTINE
+0000304E  6100 01F6                107      BSR     ENEMY_TURN      BRANCH TO ENEMY_TURN SUBROUTINE
+00003052  6100 0026                108      BSR     PLAYER_TURN     BRANCH TO PLAYER TURN SUBROUTINE
+00003056  6100 01EE                109      BSR     ENEMY_TURN      BRANCH TO ENEMY_TURN SUBROUTINE
+0000305A  6100 02DC                110      BSR     REPLAY          BRANCH TO REPLAY GAME SUBROUTINE
+0000305E  4E75                     111      RTS                     RETURN FROM GAMELOOP: SUBROUTINE
+00003060                           112  
+00003060                           113  *-------------------------------------------------------
+00003060                           114  *---------------------QUEST_INFO------------------------
+00003060                           115  *------------------------------------------------------- 
+00003060                           116  QUEST_INFO
+00003060  6100 02F8                117      BSR     ENDL            PRINT A CR AND LF
+00003064  6100 02B4                118      BSR     DECORATE        DECORATE WITH DOTS USING A LOOP
+00003068  43F9 00003973            119      LEA     MISSION_MSG,A1   
+0000306E  103C 000E                120      MOVE.B  #14,D0
+00003072  4E4F                     121      TRAP    #15
+00003074  6100 02A4                122      BSR     DECORATE
+00003078  4E75                     123      RTS
+0000307A                           124      
+0000307A                           125  *-------------------------------------------------------
+0000307A                           126  *-----------------PLAYER FIGHTING OPTIONS----------------
+0000307A                           127  *-------------------------------------------------------- 
+0000307A                           128  PLAYER_TURN:
+0000307A  6100 02DE                129      BSR     ENDL
+0000307E  6100 01A8                130      BSR     SHOW_HEALTH
+00003082  6100 0186                131      BSR     POTIONS
+00003086  6100 0292                132      BSR     DECORATE
+0000308A  0C52 0001                133      CMP     #1,(A2)
+0000308E  6D00 024A                134      BLT     WIN_FIGHT
+00003092  0C54 0001                135      CMP     #1,(A4)
+00003096  6D00 026C                136      BLT     LOSE_FIGHT
+0000309A  43F9 00003A11            137      LEA     PLAYERTURN_MSG,A1
+000030A0  103C 000E                138      MOVE.B  #14,D0
+000030A4  4E4F                     139      TRAP    #15
+000030A6  103C 0004                140      MOVE.B  #4,D0   
+000030AA  4E4F                     141      TRAP    #15
+000030AC                           142      
+000030AC  3001                     143      MOVE    D1,D0   GETS INPUT FROM PLAYER AND LET CHOOSE OPTION
+000030AE  B27C 0001                144      CMP     #1,D1
+000030B2  6600 000C                145      BNE     NEXT_CHOICE   IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
+000030B6  6100 0262                146      BSR     DECORATE  
+000030BA  6100 01C2                147      BSR     COLLISION   
+000030BE  4E75                     148      RTS
+000030C0                           149  
+000030C0                           150  NEXT_CHOICE:
+000030C0  B27C 0002                151      CMP     #2,D1
+000030C4  6600 005C                152      BNE     WRONG_CHOICE
+000030C8  1C13                     153      MOVE.B  (A3),D6
+000030CA  BC7C 0001                154      CMP     #1,D6
+000030CE  6C00 0012                155      BGE     MINUS_POTION
+000030D2  43F9 00003AEF            156      LEA     ZEROPOTION_MSG,A1
+000030D8  103C 000E                157      MOVE.B  #14,D0
+000030DC  4E4F                     158      TRAP    #15
+000030DE  619A                     159      BSR     PLAYER_TURN
+000030E0  4E75                     160      RTS
+000030E2                           161      
+000030E2                           162  MINUS_POTION:
+000030E2  1E14                     163      MOVE.B  (A4),D7
+000030E4  BE7C 0064                164      CMP     #100,D7
+000030E8  6C00 0022                165      BGE     CANT_USE_POTION
+000030EC  43F9 00003AC4            166      LEA     USE_POTION,A1
+000030F2  103C 000E                167      MOVE.B  #14,D0
+000030F6  4E4F                     168      TRAP    #15
+000030F8  6100 0220                169      BSR     DECORATE
+000030FC  5313                     170      SUB.B   #1,(A3)
+000030FE  0614 003C                171      ADD.B   #60,(A4)
+00003102  6100 0124                172      BSR     SHOW_HEALTH
+00003106  6100 0102                173      BSR     POTIONS
+0000310A  4E75                     174      RTS
+0000310C                           175     
+0000310C                           176  CANT_USE_POTION:
+0000310C  43F9 00003A9B            177      LEA     FULL_HEALTH,A1
+00003112  103C 000E                178      MOVE.B  #14,D0
+00003116  4E4F                     179      TRAP    #15
+00003118  6100 0200                180      BSR     DECORATE 
+0000311C  6100 FF5C                181      BSR     PLAYER_TURN
+00003120  4E75                     182      RTS 
+00003122                           183      
 00003122                           184  WRONG_CHOICE:
 00003122  43F9 00003E21            185      LEA     WRONG_OPTION,A1
 00003128  103C 000E                186      MOVE.B  #14,D0
@@ -814,7 +814,7 @@ GAME                3000
 GAMELOOP            3046
 GAMEPLAY_MSG        39F3
 GOLD                318C
-GOLD_AMOUNT         0
+GOLD_AMOUNT         64
 GOLD_MSG            3957
 HEALTH              64
 HEALTH_MSG          396B
