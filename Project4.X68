@@ -53,7 +53,6 @@ START:
     MOVE.B  #TREES_AMOUNT,$4068        PUT TREES IN MEMORY LOCATION $4068
     MOVE.B  $4068,4068
 
-
     BSR     WELCOME    BRANCH TO THE WELCOME SUBROUTINE
     BSR     INPUT      BRANCH TO THE INPUT SUBROUTINE
     BSR     GAME       BRANCH TO THE GAME SUBROUTINE
@@ -96,7 +95,7 @@ INPUT:
     BSR     SHOW_HEALTH     BRANCH TO HEALTH INPUT SUBROUTINE
     BSR     POTIONS         BRANCH TO POTION INPUT SUBROUTINE
     BSR     PROMPT          BRANCH TO WEAPONS INPUT SUBROUTINE
-    RTS
+    RTS                     RETURN FROM INPUT: SUBROUTINE
 
 *-------------------------------------------------------
 *----------------------GAMELOOP-------------------------
@@ -104,9 +103,9 @@ INPUT:
 GAMELOOP:
     BSR     QUEST_INFO      BRANCH TO UPDATE GAME SUBROUTINE        
     BSR     PLAYER_TURN     BRANCH TO PLAYER TURN SUBROUTINE
-    BSR     ENEMY_TURN      BRANCH TO ENEMY_TURN SUBROUTINE
+    BSR     ENEMY_TURN      BRANCH TO ENEMY TURN SUBROUTINE
     BSR     PLAYER_TURN     BRANCH TO PLAYER TURN SUBROUTINE
-    BSR     ENEMY_TURN      BRANCH TO ENEMY_TURN SUBROUTINE
+    BSR     ENEMY_TURN      BRANCH TO ENEMY TURN SUBROUTINE
     BSR     REPLAY          BRANCH TO REPLAY GAME SUBROUTINE
     RTS                     RETURN FROM GAMELOOP: SUBROUTINE
 
@@ -116,20 +115,20 @@ GAMELOOP:
 QUEST_INFO
     BSR     ENDL            PRINT A CR AND LF
     BSR     DECORATE        DECORATE WITH DOTS USING A LOOP
-    LEA     MISSION_MSG,A1   
-    MOVE.B  #14,D0
+    LEA     MISSION_MSG,A1  PRINT MISSION_MSG 
+    MOVE.B  #14,D0          Display the NULL terminated string at (A1) without CR, LF
     TRAP    #15
     BSR     DECORATE
-    RTS
+    RTS                     RETURN FROM QUEST_INFO: SUBROUTINE
     
 *-------------------------------------------------------
 *-----------------PLAYER FIGHTING OPTIONS----------------
 *-------------------------------------------------------- 
 PLAYER_TURN:
-    BSR     ENDL
-    BSR     SHOW_HEALTH
-    BSR     POTIONS
-    BSR     DECORATE
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    BSR     SHOW_HEALTH         BRANCH TO SHOW HEALTH SUBROUTINE
+    BSR     POTIONS             BRANCH TO POTIONS SUBROUTINE
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
     CMP     #1,(A2)
     BLT     WIN_FIGHT
     CMP     #1,(A4)
@@ -140,12 +139,12 @@ PLAYER_TURN:
     MOVE.B  #4,D0   
     TRAP    #15
     
-    MOVE    D1,D0   GETS INPUT FROM PLAYER AND LET CHOOSE OPTION
+    MOVE    D1,D0               GETS INPUT FROM PLAYER AND LET CHOOSE OPTION
     CMP     #1,D1
-    BNE     NEXT_CHOICE   IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
-    BSR     DECORATE  
-    BSR     COLLISION   
-    RTS
+    BNE     NEXT_CHOICE         IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+    BSR     COLLISION           BRANCH TO COLLISION SUBROUTINE
+    RTS                         RETURN FROM PLAYER_TURN: SUBROUTINE
 
 NEXT_CHOICE:
     CMP     #2,D1
@@ -156,8 +155,8 @@ NEXT_CHOICE:
     LEA     ZEROPOTION_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
-    BSR     PLAYER_TURN
-    RTS
+    BSR     PLAYER_TURN         BRANCH TO PLAYER TURN SUBROUTINE
+    RTS                         RETURN FROM NEXT_CHOICE: SUBROUTINE
     
 MINUS_POTION:
     MOVE.B  (A4),D7
@@ -166,45 +165,45 @@ MINUS_POTION:
     LEA     USE_POTION,A1
     MOVE.B  #14,D0
     TRAP    #15
-    BSR     DECORATE
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
     SUB.B   #1,(A3)
     ADD.B   #60,(A4)
-    BSR     SHOW_HEALTH
-    BSR     POTIONS
-    RTS
+    BSR     SHOW_HEALTH         BRANCH TO SHOW HEALTH SUBROUTINE
+    BSR     POTIONS             BRANCH TO POTIONS SUBROUTINE
+    RTS                         RETURN FROM MINUS_POTION: SUBROUTINE
    
 CANT_USE_POTION:
     LEA     FULL_HEALTH,A1
     MOVE.B  #14,D0
     TRAP    #15
-    BSR     DECORATE 
-    BSR     PLAYER_TURN
-    RTS 
-    
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+    BSR     PLAYER_TURN         BRANCH TO PLAYER TURN SUBROUTINE
+    RTS                         RETURN FROM CANT_USE_POTION: SUBROUTINE
+                                
 WRONG_CHOICE:
     LEA     WRONG_OPTION,A1
     MOVE.B  #14,D0
     TRAP    #15
     BNE     PLAYER_TURN
-    RTS
+    RTS                         RETURN FROM WRONG_CHOICE: SUBROUTINE
     
 *-------------------------------------------------------
 *-------------------------WEAPONS-----------------------
 *-------------------------------------------------------   
 WEAPONS:
-    BSR     ENDL
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
     LEA     WEAPONS_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  (A5),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL
-    BSR     DECORATE
-    RTS
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+    RTS                         RETURN FROM WEAPONS: SUBROUTINE
     
 PROMPT:
-    BSR     WEAPONS
+    BSR     WEAPONS             BRANCH TO WEAPONS SUBROUTINE
     LEA     PRESS_ENTER,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -218,64 +217,64 @@ PROMPT:
     MOVE    D1,D0
     CMP #1,D1
     BNE GAME
-    BSR SHOP
-    RTS
+    BSR SHOP                    BRANCH TO SHOP SUBROUTINE
+    RTS                         RETURN FROM PROMPT: SUBROUTINE
 
 *-------------------------------------------------------
 *--------------------GOLD display-----------------------
 *-------------------------------------------------------
 GOLD:
-    BSR     DECORATE
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
     LEA     GOLD_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  (A6),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL
-    RTS
+    BSR     ENDL                BRANCH TO ENL SUBROUTINE
+    RTS                         RETURN FROM GOLD: SUBROUTINE
     
 *-------------------------------------------------------
 *--------------------Windmill display-------------------
 *-------------------------------------------------------
 WINDMILL:
-    BSR     DECORATE
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
     LEA     WINDMILL_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  (4048),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL
-    RTS
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    RTS                         RETURN FROM WINDMILL: SUBROUTINE
   
 *-------------------------------------------------------
 *--------------------Solar Panel display----------------
 *-------------------------------------------------------
 SOLAR_PANEL:
-    BSR     ENDL
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
     LEA     SOLAR_PANEL_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  (4058),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL            BRANCH TO ENDL SUBROUTINE
-    RTS
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    RTS                         RETURN FROM SOLAR_PANEL: SUBROUTINE
 
 *-------------------------------------------------------
 *--------------------Trees display----------------------
 *-------------------------------------------------------
 TREES:
-    BSR     ENDL
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
     LEA     TREES_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  (4068),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL            BRANCH TO ENDL SUBROUTINE
-    RTS
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    RTS                         RETURN FROM TREES: SUBROUTINE
 
 
 
@@ -283,49 +282,49 @@ TREES:
 *--------------------POTION DISPLAY---------------------
 *-------------------------------------------------------
 POTIONS:
-    BSR     ENDL
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE   
     LEA     POTIONS_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  (A3),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL            BRANCH TO ENDL SUBROUTINE
-    RTS
-    
-    
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    RTS                         RETURN FROM POTIONS: SUBROUTINE
+      
 *-------------------------------------------------------
 *--------------------PLAYER HEALTH----------------------
 *-------------------------------------------------------
 SHOW_HEALTH:
-    BSR     ENDL
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
     LEA     HEALTH_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  (A4),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL            BRANCH TO ENDL SUBROUTINE
-    RTS
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    RTS                         RETURN FROM SHOW_HEALTH: SUBROUTINE
+    
 *-------------------------------------------------------
 *---------------------ENEMY TURN------------------------
 *------------------------------------------------------- 
 ENEMY_TURN:
-    BSR     ENDL
-    BSR     DECORATE
+    BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
     LEA     GAMEPLAY_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  #4,D0
     TRAP    #15
     SUB.B   #49,(A4)
-    CMP     #1,(A2)            IF ENEMY HEALTH IS BELOW 1, PLAYER WINS
+    CMP     #1,(A2)             IF ENEMY HEALTH IS BELOW 1, PLAYER WINS
     BLT     WIN_FIGHT
     CMP     #1,(A4)             IF PLAYER HEALTH IS BELOW 1, PLAYER LOSES
     BLT     LOSE_FIGHT
-    BSR     DECORATE
-    BSR     PLAYER_TURN
-    RTS
+    BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+    BSR     PLAYER_TURN         BRANCH TO PLAYER TURN SUBROUTINE
+    RTS                         RETURN FROM ENEMY_TURN: SUBROUTINE
 
 *-------------------------------------------------------
 *------------------ATTACKING THE MINIBOSS---------------
@@ -334,10 +333,10 @@ COLLISION:
     LEA     HIT_MSG,A1
     MOVE    #14,D0
     TRAP    #15
-    BSR     DECORATE
-    BSR     ENDL
+    BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
     MOVE.B  #DAMAGE,D5
-    MULU    #OWNED_WEAPONS,D5           MULTIPLIES DAMAGE BY LEVEL OF WEAPON
+    MULU    #OWNED_WEAPONS,D5       MULTIPLIES DAMAGE BY LEVEL OF WEAPON
     SUB.B   D5,(A2)
     CMP     #1,(A2)
     BLT WIN_FIGHT
@@ -349,56 +348,56 @@ COLLISION:
     MOVE.B  (A2),D1
     MOVE.B  #3,D0
     TRAP    #15
-    BSR     ENDL
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
     CMP     #1,(A2)
     BLT     WIN_FIGHT
     CMP     #1,(A4)
     BLT     LOSE_FIGHT
     
-    BSR     ENEMY_TURN
-    RTS
+    BSR     ENEMY_TURN              BRANCH TO ENEMY TURN SUBROUTINE
+    RTS                             RETURN FROM COLLISION: SUBROUTINE
     
 WIN_FIGHT:
-    BSR     SHOW_HEALTH     Displays health on screen
-    ADD.B   #25,(A6)        Gives the player money for defeating mini boss
-    BSR     GOLD           Displays money on screen
-    BSR     ENDL
-    LEA     WIN_MSG,A1      Displays the winning message
+    BSR     SHOW_HEALTH             DISPLAYS HEALTH ON SCREEN
+    ADD.B   #25,(A6)                GIVES THE PLAYER MONEY FOR DEFEATING MINI BOSS
+    BSR     GOLD                    DISPLAYS MONEY ON SCREEN
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    LEA     WIN_MSG,A1              Displays the winning message
     MOVE.B  #14,D0
     TRAP    #15
-    MOVE.B  #100,(A4)       Replenishes player health
-    MOVE.B  #80,(A2)        Replenishes mini boss health
-    BSR REPLAY
-    RTS
+    MOVE.B  #100,(A4)               REPLENISHES PLAYER HEALTH
+    MOVE.B  #80,(A2)                REPLENISHES MINI BOSS HEALTH
+    BSR REPLAY                      BRANCH TO REPLAY SUBROUTINE
+    RTS                             RETURN FROM WIN_FIGHT: SUBROUTINE
      
 LOSE_FIGHT:
-    LEA     LOSE_MSG,A1     Displays the lose message 
+    LEA     LOSE_MSG,A1             DISPLAYS THE LOSE MESSAGE 
     MOVE.B  #14,D0
     TRAP    #15
     MOVE.B  #100,(A4)
-    BSR REPLAY
-    RTS
+    BSR REPLAY                      BRANCH TO REPLAY SUBROUTINE
+    RTS                             RETURN FROM LOSE_FIGHT: SUBROUTINE
 
 *-------------------------------------------------------
 *------------------SCREEN DECORATION--------------------
 *-------------------------------------------------------
 DECORATE:
     MOVE.B  #60, D3
-    BSR     ENDL
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
 OUT:
     LEA     LOOP_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
-	SUB     #1,D3   DECREMENT LOOP COUNTER
-    BNE     OUT	    REPEAT UNTIL D0=0
-    BSR     ENDL
-    RTS
+	SUB     #1,D3                   DECREMENT LOOP COUNTER
+    BNE     OUT	                    REPEAT UNTIL D0=0
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    RTS                             RETURN FROM OUT: SUBROUTINE
     
 *-------------------------------------------------------
 *------------------------REPLAY-------------------------
 *-------------------------------------------------------
 REPLAY:
-    BSR     ENDL
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
     LEA     REPLAY_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -407,8 +406,8 @@ REPLAY:
     TRAP    #15
 
     CMP     #EXIT,D1
-    BEQ     END         IF SR Z REGISTER CONTAINS 1 BEQ => BRANCH EQUALS
-    BSR     INPUT
+    BEQ     END                     IF SR Z REGISTER CONTAINS 1 BEQ => BRANCH EQUALS
+    BSR     INPUT                   RETURN FROM REPLAY: SUBROUTINE
 
 ENDL:
     MOVEM.L D0/A1,-(A7)
@@ -416,14 +415,14 @@ ENDL:
     LEA     CRLF,A1
     TRAP    #15
     MOVEM.L (A7)+,D0/A1
-    RTS
+    RTS                             RETURN FROM ENDL: SUBROUTINE
 
 *-------------------------------------------------------
 *-------------------SHOP--------------------------------
 *-------------------------------------------------------
 SHOP:
-    BSR     ENDL
-    BSR     DECORATE
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
     LEA     SHOP_MSG,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -432,9 +431,10 @@ SHOP:
     TRAP    #15
     MOVE.B  #4,D0   
     TRAP    #15
-    BSR     DECORATE
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM SHOP: SUBROUTINE
+    
 SHOP_MESSAGE:
     LEA     PRICE_MSG,A1
     MOVE.B  #14,D0
@@ -442,14 +442,14 @@ SHOP_MESSAGE:
     MOVE.B  #4,D0   
     TRAP    #15
     
-    MOVE    D1,D0   GETS INPUT FROM PLAYER AND LETS BUY STUFF
+    MOVE    D1,D0                   GETS INPUT FROM PLAYER AND LETS BUY STUFF
     CMP     #1,D1
-    BNE     WEAPON_ITEM   IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
+    BNE     WEAPON_ITEM             IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
     
     MOVE.B  #POTION_PRICE,D4
     MOVE.B  (A6),D6
     CMP     D4,D6
-    BGE     ADD_POTION  IF MONEY IS GREATER OR EQUAL TO PRICE OF POTION,CAN BUY
+    BGE     ADD_POTION              IF MONEY IS GREATER OR EQUAL TO PRICE OF POTION,CAN BUY
     LEA     NO_MONEY_POTION,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -458,14 +458,14 @@ SHOP_MESSAGE:
     TRAP    #15
     MOVE.B  #4,D0
     TRAP    #15
-    BSR     GOLD 
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES  
-    BSR     POTIONS
-    BSR     WEAPONS           
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM SHOP_MESSAGE: SUBROUTINE               
     
 WEAPON_ITEM:
     CMP     #2,D1
@@ -475,9 +475,9 @@ WEAPON_ITEM:
     MOVE.B  (A6),D6
     MOVE.B  (A5),D4
     CMP     #MAX_WEAPON,D4
-    BEQ     CANT_ADD  IF MONEY IS EQUAL TO MAX NUMBER OF UPGRADES, CAN'T BUY
+    BEQ     CANT_ADD                IF MONEY IS EQUAL TO MAX NUMBER OF UPGRADES, CAN'T BUY
     CMP     D5,D6
-    BGE     ADD_WEAPON  IF MONEY IS GREATER OR EQUAL TO PRICE OF WEAPON,CAN BUY
+    BGE     ADD_WEAPON              IF MONEY IS GREATER OR EQUAL TO PRICE OF WEAPON,CAN BUY
     LEA     NO_MONEY_WEAPON,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -486,14 +486,14 @@ WEAPON_ITEM:
     TRAP    #15
     MOVE.B  #4,D0
     TRAP    #15
-    BSR     GOLD
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES
-    BSR     POTIONS
-    BSR     WEAPONS
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM WEAPON_ITEM: SUBROUTINE
  
 WINDMILL_ITEM:
     CMP     #3,D1
@@ -503,7 +503,7 @@ WINDMILL_ITEM:
     MOVE.B  (A6),D6
     MOVE.B  (A5),D4
     CMP     D5,D6
-    BGE     ADD_WINDMILL  IF MONEY IS GREATER OR EQUAL TO PRICE OF WINDMILL,CAN BUY
+    BGE     ADD_WINDMILL            IF MONEY IS GREATER OR EQUAL TO PRICE OF WINDMILL,CAN BUY
     LEA     NO_MONEY_WINDMILL,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -512,14 +512,14 @@ WINDMILL_ITEM:
     TRAP    #15
     MOVE.B  #4,D0
     TRAP    #15
-    BSR     GOLD 
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES  
-    BSR     POTIONS
-    BSR     WEAPONS           
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE  
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE    
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE         
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM WINDMILL_ITEM: SUBROUTINE           
     
 SOLAR_PANEL_ITEM:
     CMP     #4,D1
@@ -529,7 +529,7 @@ SOLAR_PANEL_ITEM:
     MOVE.B  (A6),D6
     MOVE.B  (A5),D4
     CMP     D5,D6
-    BGE     ADD_SOLARPANEL  IF MONEY IS GREATER OR EQUAL TO PRICE OF SOLAR PANEL,CAN BUY
+    BGE     ADD_SOLARPANEL          IF MONEY IS GREATER OR EQUAL TO PRICE OF SOLAR PANEL,CAN BUY
     LEA     NO_MONEY_SOLARPANEL,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -538,14 +538,14 @@ SOLAR_PANEL_ITEM:
     TRAP    #15
     MOVE.B  #4,D0
     TRAP    #15
-    BSR     GOLD
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES  
-    BSR     POTIONS
-    BSR     WEAPONS           
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE  
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE          
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM SOLAR_PANEL_ITEM: SUBROUTINE
     
 TREE_ITEM:
     CMP     #5,D1
@@ -555,7 +555,7 @@ TREE_ITEM:
     MOVE.B  (A6),D6
     MOVE.B  (A5),D4
     CMP     D5,D6
-    BGE     ADD_TREES  IF MONEY IS GREATER OR EQUAL TO PRICE OF TREE,CAN BUY
+    BGE     ADD_TREES               IF MONEY IS GREATER OR EQUAL TO PRICE OF TREE,CAN BUY
     LEA     NO_MONEY_TREES,A1
     MOVE.B  #14,D0
     TRAP    #15
@@ -564,93 +564,92 @@ TREE_ITEM:
     TRAP    #15
     MOVE.B  #4,D0
     TRAP    #15
-    BSR     GOLD 
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES  
-    BSR     POTIONS
-    BSR     WEAPONS           
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE         
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM TREE_ITEM: SUBROUTINE
 
 ADD_POTION:
     ADD.B   #1,(A3)
     SUB.B   #POTION_PRICE,(A6)
-    BSR     ENDL
-    BSR     GOLD
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES
-    BSR     POTIONS
-    BSR     WEAPONS
-    BSR     ENDL
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM ADD_POTION: SUBROUTINE
    
 ADD_WEAPON:
     ADD.B   #1,(A5)
     SUB.B   #WEAPON_PRICE,(A6)
-    BSR     ENDL
-    BSR     GOLD
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES
-    BSR     POTIONS
-    BSR     WEAPONS
-    BSR     ENDL
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM ADD_WEAPON: SUBROUTINE
     
 ADD_WINDMILL:
     ADD.B   #1,(4048)
     SUB.B   #WINDMILL_PRICE,(A6)
-    BSR     ENDL
-    BSR     GOLD
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES
-    BSR     POTIONS
-    BSR     WEAPONS
-    BSR     ENDL
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM ADD_WINDMILL: SUBROUTINE
     
 ADD_SOLARPANEL:
     ADD.B   #1,(4058)
     SUB.B   #SOLARPANEL_PRICE,(A6)
-    BSR     ENDL
-    BSR     GOLD
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES
-    BSR     POTIONS
-    BSR     WEAPONS
-    BSR     ENDL
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM ADD_SOLARPANEL: SUBROUTINE
 
 ADD_TREES:
     ADD.B   #1,(4068)
     SUB.B   #TREES_PRICE,(A6)
-    BSR     ENDL
-    BSR     GOLD
-    BSR     WINDMILL        
-    BSR     SOLAR_PANEL     
-    BSR     TREES
-    BSR     POTIONS
-    BSR     WEAPONS
-    BSR     ENDL
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+    BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+    BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+    BSR     TREES                   BRANCH TO TREES SUBROUTINE
+    BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+    BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+    BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM ADD_TREES: SUBROUTINE
 
 CANT_ADD:
     LEA     MAX_UPGRADE,A1
     MOVE.B  #14,D0 
     TRAP    #15
-    BSR     SHOP_MESSAGE
-    RTS
+    BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+    RTS                             RETURN FROM CANT_ADD: SUBROUTINE
 
-   
 *-------------------------------------------------------
 *-------------------DATA DELARATIONS--------------------
 *-------------------------------------------------------
@@ -781,6 +780,7 @@ NO_MONEY_TREES:       DC.B    $0D,$0A
                         
 
     END START
+
 
 
 
