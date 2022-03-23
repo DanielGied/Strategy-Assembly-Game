@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 3/22/2022 10:33:50 PM
+Created On: 23/03/2022 10:11:20
 
 00000000                             1  *-----------------------------------------------------------------------------------
 00000000                             2  * Title: Project I
@@ -30,10 +30,10 @@ Created On: 3/22/2022 10:33:50 PM
 00001000  =0000000A                 26  WINDMILL_AMOUNT     EQU 10    AMOUNT OF WINDMILLS IN PLAYER'S POSSESSION
 00001000  =0000000A                 27  SOLARPANEL_AMOUNT   EQU 10    AMOUNT OF SOLAR PANELS IN PLAYER'S POSSESSION
 00001000  =0000000F                 28  TREES_AMOUNT        EQU 15    AMOUNT OF TREES IN PLAYER'S POSSESSION
-00001000  =00000064                 29  GOLD_AMOUNT         EQU 100   AMOUNT OF GOLD IN PLAYER'S POSSESSION
+00001000  =00000000                 29  GOLD_AMOUNT         EQU 0   AMOUNT OF GOLD IN PLAYER'S POSSESSION
 00001000  =0000000A                 30  POTION_PRICE        EQU 10    PRICE OF POTION IN SHOP
 00001000  =00000064                 31  WEAPON_PRICE        EQU 100   PRICE OF WEAPON UPGRADE IN SHOP
-00001000  =00000064                 32  WINDMILL_PRICE      EQU 100   PRICE OF WINDMILL IN SHOP
+00001000  =0000004B                 32  WINDMILL_PRICE      EQU 75    PRICE OF WINDMILL IN SHOP
 00001000  =00000032                 33  SOLARPANEL_PRICE    EQU 50    PRICE OF SOLAR PANEL IN SHOP
 00001000  =00000019                 34  TREES_PRICE         EQU 25    PRICE OF TREE IN SHOP
 00001000  =00000050                 35  BOSS_HEALTH         EQU 80    ENEMYS HEALTH
@@ -53,7 +53,7 @@ Created On: 3/22/2022 10:33:50 PM
 0000101A  49F8 4010                 49      LEA     $4010,A4                   ASSIGN ADDRESS A4 TO THAT MEMORY LOCATION
 0000101E  11FC 0001 4014            50      MOVE.B  #CURRENT_LEVEL,$4014       PUT WEAPON LEVEL IN MEMORY LOCATION $4014
 00001024  4BF8 4014                 51      LEA     $4014,A5                   ASSIGN ADDRESS A5 TO THAT MEMORY LOCATION
-00001028  11FC 0064 4022            52      MOVE.B  #GOLD_AMOUNT,$4022         PUT GOLD IN MEMORY LOCATION $4022
+00001028  11FC 0000 4022            52      MOVE.B  #GOLD_AMOUNT,$4022         PUT GOLD IN MEMORY LOCATION $4022
 0000102E  4DF8 4022                 53      LEA     $4022,A6                   ASSIGN ADDRESS A6 TO THAT MEMORY LOCATION
 00001032  11FC 000A 4048            54      MOVE.B  #WINDMILL_AMOUNT,$4048     PUT WINDMILL IN MEMORY LOCATION $4048
 00001038  11F8 4048 0FD0            55      MOVE.B  $4048,4048
@@ -96,9 +96,9 @@ Created On: 3/22/2022 10:33:50 PM
 00002024                            92  *---------GAMEPLAY INPUT VALUES SUBROUTINE--------------
 00002024                            93  *-------------------------------------------------------    
 00002024                            94  INPUT:
-00002024  6100 043E                 95      BSR     DECORATE
-00002028  6100 01BC                 96      BSR     TEMPERATURE
-0000202C  6100 0476                 97      BSR     ENDL
+00002024  6100 043E                 95      BSR     DECORATE        DECORATE WITH DOTS USING A LOOP
+00002028  6100 01BC                 96      BSR     TEMPERATURE     BRANCH TO TEMPERATURE SUBROUTINE
+0000202C  6100 0476                 97      BSR     ENDL            BRANCH TO ENDL SUBROUTINE
 00002030  6100 01CC                 98      BSR     WINDMILL        BRANCH TO WINDMILL INPUT SUBROUTINE
 00002034  6100 01E8                 99      BSR     SOLAR_PANEL     BRANCH TO SOLAR PANEL INPUT SUBROUTINE
 00002038  6100 0204                100      BSR     TREES           BRANCH TO TREES INPUT SUBROUTINE
@@ -138,31 +138,31 @@ Created On: 3/22/2022 10:33:50 PM
 00002094  43F9 00002C26            134      LEA     QUEST_MSG,A1    PRINT QUEST_MSG 
 0000209A  103C 000E                135      MOVE.B  #14,D0          
 0000209E  4E4F                     136      TRAP    #15
-000020A0  6100 03C2                137      BSR     DECORATE
-000020A4  6100 03FE                138      BSR     ENDL
-000020A8  6100 013C                139      BSR     TEMPERATURE
-000020AC  6100 03F6                140      BSR     ENDL
+000020A0  6100 03C2                137      BSR     DECORATE        BRANCH TO DECORATE SUBROUTINE
+000020A4  6100 03FE                138      BSR     ENDL            BRANCH TO ENDL SUBROUTINE
+000020A8  6100 013C                139      BSR     TEMPERATURE     BRANCH TO TEMPERATURE SUBROUTINE
+000020AC  6100 03F6                140      BSR     ENDL            BRANCH TO ENDL SUBROUTINE
 000020B0  4E75                     141      RTS                     RETURN FROM QUEST_INFO: SUBROUTINE
 000020B2                           142      
 000020B2                           143  POTION_CHOICE:
-000020B2  B27C 0002                144      CMP     #2,D1
+000020B2  B27C 0002                144      CMP     #2,D1               COMPARE WITH 2
 000020B6  6600 008A                145      BNE     WRONG_CHOICE
 000020BA  1C13                     146      MOVE.B  (A3),D6
-000020BC  BC7C 0001                147      CMP     #1,D6
+000020BC  BC7C 0001                147      CMP     #1,D6               COMPARE WITH 1
 000020C0  6C00 0024                148      BGE     MINUS_POTION
-000020C4  6100 0680                149      BSR     CLEAR_SCREEN
-000020C8  6100 039A                150      BSR     DECORATE
-000020CC  6100 03D6                151      BSR     ENDL
-000020D0  43F9 00002E41            152      LEA     ZEROPOTION_MSG,A1
+000020C4  6100 0680                149      BSR     CLEAR_SCREEN        BRANCH TO CLEAR SCREEN SUBROUTINE
+000020C8  6100 039A                150      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+000020CC  6100 03D6                151      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+000020D0  43F9 00002E41            152      LEA     ZEROPOTION_MSG,A1   PRINT ZERO POTION MSG IF YOU GOT NO POTIONS LEFT
 000020D6  103C 000E                153      MOVE.B  #14,D0
 000020DA  4E4F                     154      TRAP    #15
-000020DC  6100 03C6                155      BSR     ENDL
+000020DC  6100 03C6                155      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
 000020E0  6100 01B4                156      BSR     PLAYER_TURN         BRANCH TO PLAYER TURN SUBROUTINE
-000020E4  4E75                     157      RTS                         RETURN FROM NEXT_CHOICE: SUBROUTINE
+000020E4  4E75                     157      RTS                         RETURN FROM POTION_CHOICE: SUBROUTINE
 000020E6                           158      
 000020E6                           159  MINUS_POTION:
-000020E6  1E14                     160      MOVE.B  (A4),D7
-000020E8  BE7C 0064                161      CMP     #100,D7
+000020E6  1E14                     160      MOVE.B  (A4),D7             INDIRECT ADDRESSING
+000020E8  BE7C 0064                161      CMP     #100,D7             
 000020EC  6C00 0032                162      BGE     CANT_USE_POTION
 000020F0  6100 0654                163      BSR     CLEAR_SCREEN        BRANCH TO CLEAR SCREEN SUBROUTINE
 000020F4  6100 036E                164      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
@@ -170,7 +170,7 @@ Created On: 3/22/2022 10:33:50 PM
 000020FE  103C 000E                166      MOVE.B  #14,D0
 00002102  4E4F                     167      TRAP    #15
 00002104  6100 035E                168      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
-00002108  5313                     169      SUB.B   #1,(A3)
+00002108  5313                     169      SUB.B   #1,(A3)             MINUS 1 FROM POTION IF USED
 0000210A  0614 003C                170      ADD.B   #60,(A4)            USE POTION AND ADD 60 HEALTH TO PLAYER
 0000210E  6100 016C                171      BSR     SHOW_HEALTH         BRANCH TO SHOW HEALTH SUBROUTINE
 00002112  6100 014A                172      BSR     POTIONS             BRANCH TO POTIONS SUBROUTINE
@@ -179,19 +179,19 @@ Created On: 3/22/2022 10:33:50 PM
 0000211E  4E75                     175      RTS                         RETURN FROM MINUS_POTION: SUBROUTINE
 00002120                           176     
 00002120                           177  CANT_USE_POTION:
-00002120  6100 0624                178      BSR     CLEAR_SCREEN
-00002124  6100 033E                179      BSR     DECORATE
+00002120  6100 0624                178      BSR     CLEAR_SCREEN        BRANCH TO CLEAR SCREEN SUBROUTINE
+00002124  6100 033E                179      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
 00002128  43F9 00002DE4            180      LEA     FULL_HEALTH,A1      DISPLAYS THE FULL HEALTH MESSAGE
 0000212E  103C 000E                181      MOVE.B  #14,D0
 00002132  4E4F                     182      TRAP    #15
-00002134  6100 036E                183      BSR     ENDL
+00002134  6100 036E                183      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
 00002138  6100 032A                184      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
 0000213C  6100 0158                185      BSR     PLAYER_TURN         BRANCH TO PLAYER TURN SUBROUTINE
 00002140  4E75                     186      RTS                         RETURN FROM CANT_USE_POTION: SUBROUTINE
 00002142                           187                                  
 00002142                           188  WRONG_CHOICE:
-00002142  6100 0602                189      BSR     CLEAR_SCREEN
-00002146  6100 031C                190      BSR     DECORATE
+00002142  6100 0602                189      BSR     CLEAR_SCREEN        BRANCH TO CLEAR SCREEN SUBROUTINE
+00002146  6100 031C                190      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
 0000214A  43F9 0000342A            191      LEA     WRONG_OPTION,A1     DISPLAYS THE WRONG OPTION MESSAGE
 00002150  103C 000E                192      MOVE.B  #14,D0
 00002154  4E4F                     193      TRAP    #15
@@ -206,7 +206,7 @@ Created On: 3/22/2022 10:33:50 PM
 00002160  43F9 00002BEF            202      LEA     WEAPONS_MSG,A1      DISPLAYS THE WEAPONS MESSAGE
 00002166  103C 000E                203      MOVE.B  #14,D0
 0000216A  4E4F                     204      TRAP    #15
-0000216C  1215                     205      MOVE.B  (A5),D1
+0000216C  1215                     205      MOVE.B  (A5),D1             INDIRECT ADDRESSING
 0000216E  103C 0003                206      MOVE.B  #3,D0
 00002172  4E4F                     207      TRAP    #15
 00002174  6100 032E                208      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
@@ -218,17 +218,17 @@ Created On: 3/22/2022 10:33:50 PM
 00002180  43F9 00002CE4            214      LEA     CLICK_ENTER,A1      DISPLAYS THE CLICK ENTER MESSAGE
 00002186  103C 000E                215      MOVE.B  #14,D0
 0000218A  4E4F                     216      TRAP    #15
-0000218C  103C 0004                217      MOVE.B  #4,D0   
+0000218C  103C 0004                217      MOVE.B  #4,D0               READ A NUMBER FROM THE KEYBOARD
 00002190  4E4F                     218      TRAP    #15
-00002192  6100 05B2                219      BSR     CLEAR_SCREEN
+00002192  6100 05B2                219      BSR     CLEAR_SCREEN        BRANCH TO CLEAR SCREEN SUBROUTINE
 00002196  43F9 00003130            220      LEA     GAME_OPTION,A1      DISPLAYS THE GAME OPTION MESSAGE
 0000219C  103C 000E                221      MOVE.B  #14,D0
 000021A0  4E4F                     222      TRAP    #15
-000021A2  6100 0300                223      BSR     ENDL
-000021A6  43F9 00003216            224      LEA     GAME_OPTION1,A1      DISPLAYS THE GAME OPTION MESSAGE
+000021A2  6100 0300                223      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+000021A6  43F9 00003216            224      LEA     GAME_OPTION1,A1     DISPLAYS THE GAME OPTION MESSAGE
 000021AC  103C 000E                225      MOVE.B  #14,D0
 000021B0  4E4F                     226      TRAP    #15
-000021B2  103C 0004                227      MOVE.B  #4,D0   
+000021B2  103C 0004                227      MOVE.B  #4,D0               READ A NUMBER FROM THE KEYBOARD
 000021B6  4E4F                     228      TRAP    #15
 000021B8  3001                     229      MOVE    D1,D0
 000021BA  B27C 0001                230      CMP #1,D1
@@ -244,7 +244,7 @@ Created On: 3/22/2022 10:33:50 PM
 000021CC  43F9 00002C05            240      LEA     GOLD_MSG,A1         DISPLAYS THE GOLD MESSAGE
 000021D2  103C 000E                241      MOVE.B  #14,D0
 000021D6  4E4F                     242      TRAP    #15
-000021D8  1216                     243      MOVE.B  (A6),D1
+000021D8  1216                     243      MOVE.B  (A6),D1             INDIRECT ADDRESSING
 000021DA  103C 0003                244      MOVE.B  #3,D0
 000021DE  4E4F                     245      TRAP    #15
 000021E0  6100 02C2                246      BSR     ENDL                BRANCH TO ENL SUBROUTINE
@@ -261,776 +261,775 @@ Created On: 3/22/2022 10:33:50 PM
 000021F6  103C 0003                257      MOVE.B  #3,D0
 000021FA  4E4F                     258      TRAP    #15
 000021FC  4E75                     259      RTS                         RETURN FROM TEMPERATURE: SUBROUTINE
-000021FE                           260  
-000021FE                           261      
-000021FE                           262  *-------------------------------------------------------
-000021FE                           263  *--------------------Windmill display-------------------
-000021FE                           264  *-------------------------------------------------------
-000021FE                           265  WINDMILL:
-000021FE  6100 0264                266      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
-00002202  43F9 00002BAE            267      LEA     WINDMILL_MSG,A1     DISPLAYS THE WINDMILL MESSAGE
-00002208  103C 000E                268      MOVE.B  #14,D0
-0000220C  4E4F                     269      TRAP    #15
-0000220E  1238 0FD0                270      MOVE.B  (4048),D1
-00002212  103C 0003                271      MOVE.B  #3,D0
-00002216  4E4F                     272      TRAP    #15
-00002218  6100 028A                273      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-0000221C  4E75                     274      RTS                         RETURN FROM WINDMILL: SUBROUTINE
-0000221E                           275    
-0000221E                           276  *-------------------------------------------------------
-0000221E                           277  *--------------------Solar Panel display----------------
-0000221E                           278  *-------------------------------------------------------
-0000221E                           279  SOLAR_PANEL:
-0000221E  6100 0284                280      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-00002222  43F9 00002BBF            281      LEA     SOLAR_PANEL_MSG,A1  DISPLAYS THE SOLAR PANEL MESSAGE
-00002228  103C 000E                282      MOVE.B  #14,D0
-0000222C  4E4F                     283      TRAP    #15
-0000222E  1238 0FDA                284      MOVE.B  (4058),D1
-00002232  103C 0003                285      MOVE.B  #3,D0
-00002236  4E4F                     286      TRAP    #15
-00002238  6100 026A                287      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-0000223C  4E75                     288      RTS                         RETURN FROM SOLAR_PANEL: SUBROUTINE
-0000223E                           289  
-0000223E                           290  *-------------------------------------------------------
-0000223E                           291  *--------------------Trees display----------------------
-0000223E                           292  *-------------------------------------------------------
-0000223E                           293  TREES:
-0000223E  6100 0264                294      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-00002242  43F9 00002BD3            295      LEA     TREES_MSG,A1        DISPLAYS THE TREES MESSAGE
-00002248  103C 000E                296      MOVE.B  #14,D0
-0000224C  4E4F                     297      TRAP    #15
-0000224E  1238 0FE4                298      MOVE.B  (4068),D1
-00002252  103C 0003                299      MOVE.B  #3,D0
-00002256  4E4F                     300      TRAP    #15
-00002258  6100 024A                301      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-0000225C  4E75                     302      RTS                         RETURN FROM TREES: SUBROUTINE
-0000225E                           303  
-0000225E                           304  *-------------------------------------------------------
-0000225E                           305  *--------------------POTION DISPLAY---------------------
-0000225E                           306  *-------------------------------------------------------
-0000225E                           307  POTIONS:
-0000225E  6100 0244                308      BSR     ENDL                BRANCH TO ENDL SUBROUTINE   
-00002262  43F9 00002BE0            309      LEA     POTIONS_MSG,A1      DISPLAYS THE POTIONS MESSAGE
-00002268  103C 000E                310      MOVE.B  #14,D0
-0000226C  4E4F                     311      TRAP    #15
-0000226E  1213                     312      MOVE.B  (A3),D1
-00002270  103C 0003                313      MOVE.B  #3,D0
-00002274  4E4F                     314      TRAP    #15
-00002276  6100 022C                315      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-0000227A  4E75                     316      RTS                         RETURN FROM POTIONS: SUBROUTINE
-0000227C                           317        
-0000227C                           318  *-------------------------------------------------------
-0000227C                           319  *--------------------PLAYER HEALTH----------------------
-0000227C                           320  *-------------------------------------------------------
-0000227C                           321  SHOW_HEALTH:
-0000227C  43F9 00002C19            322      LEA     HEALTH_MSG,A1       DISPLAYS THE HEALTH MESSAGE
-00002282  103C 000E                323      MOVE.B  #14,D0
-00002286  4E4F                     324      TRAP    #15
-00002288  1214                     325      MOVE.B  (A4),D1
-0000228A  103C 0003                326      MOVE.B  #3,D0
-0000228E  4E4F                     327      TRAP    #15
-00002290  6100 0212                328      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-00002294  4E75                     329      RTS                         RETURN FROM SHOW_HEALTH: SUBROUTINE
-00002296                           330      
-00002296                           331  *-------------------------------------------------------
-00002296                           332  *-----------------PLAYER FIGHTING OPTIONS----------------
-00002296                           333  *-------------------------------------------------------- 
-00002296                           334  PLAYER_TURN:
-00002296  6100 020C                335      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-0000229A  6100 01C8                336      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
-0000229E  61DC                     337      BSR     SHOW_HEALTH         BRANCH TO SHOW HEALTH SUBROUTINE
-000022A0  61BC                     338      BSR     POTIONS             BRANCH TO POTIONS SUBROUTINE
-000022A2  6100 FF5A                339      BSR     WINDMILL            BRANCH TO WINDMILL INPUT SUBROUTINE
-000022A6  6100 FF76                340      BSR     SOLAR_PANEL         BRANCH TO SOLAR PANEL INPUT SUBROUTINE
-000022AA  6192                     341      BSR     TREES               BRANCH TO TREES INPUT SUBROUTINE
-000022AC  6100 01B6                342      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
-000022B0  0C52 0001                343      CMP     #1,(A2)
-000022B4  6D00 0102                344      BLT     WIN_FIGHT
-000022B8  0C54 0001                345      CMP     #1,(A4)
-000022BC  6D00 0154                346      BLT     LOSE_FIGHT
-000022C0  43F9 00002D2F            347      LEA     PLAYEROPTION_MSG,A1 DISPLAYS THE PLAYER OPTION MESSAGE
-000022C6  103C 000E                348      MOVE.B  #14,D0
-000022CA  4E4F                     349      TRAP    #15
-000022CC  103C 0004                350      MOVE.B  #4,D0   
-000022D0  4E4F                     351      TRAP    #15
-000022D2                           352      
-000022D2  3001                     353      MOVE    D1,D0               GETS INPUT FROM PLAYER AND LET CHOOSE OPTION
-000022D4  B27C 0001                354      CMP     #1,D1
-000022D8  6600 FDD8                355      BNE     POTION_CHOICE       IF OPTION 1 NOT CHOSEN, MOVE POTION CHOICE
-000022DC  6100 0186                356      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
-000022E0  6100 006A                357      BSR     ATTACK              BRANCH TO ATTACK SUBROUTINE
-000022E4  4E75                     358      RTS                         RETURN FROM PLAYER_TURN: SUBROUTINE
-000022E6                           359      
-000022E6                           360    
-000022E6                           361  *-------------------------------------------------------
-000022E6                           362  *---------------------BOSS TURN-------------------------
-000022E6                           363  *------------------------------------------------------- 
-000022E6                           364  BOSS_TURN:
-000022E6  6100 01BC                365      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
-000022EA  6100 0178                366      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
-000022EE  43F9 00002D00            367      LEA     BOSS_MSG,A1         DISPLAYS THE BOSS MESSAGE
-000022F4  103C 000E                368      MOVE.B  #14,D0
-000022F8  4E4F                     369      TRAP    #15
-000022FA  43F9 00002E83            370      LEA     LOSE_RESOURCES_MSG,A1   
-00002300  103C 000E                371      MOVE.B  #14,D0              DISPLAYS THE LOSE RESOURCES MESSAGE
-00002304  4E4F                     372      TRAP    #15
-00002306  43F9 00002F8C            373      LEA     GAIN_TEMP,A1
-0000230C  103C 000E                374      MOVE.B  #14,D0
-00002310  4E4F                     375      TRAP    #15
-00002312  5438 0FEE                376      ADD.B   #2,4078             ADD 2 DEGREES CELSIUS TO THE TEMPERATURE
-00002316  5338 0FD0                377      SUB.B   #1,4048             1 WINDMILL DESTROYED
-0000231A  5338 0FDA                378      SUB.B   #1,4058             1 SOLAR PANEL DESTROYED
-0000231E  5538 0FE4                379      SUB.B   #2,4068             2 TREES DESTROYED
-00002322  0414 0023                380      SUB.B   #35,(A4)            BOSS DAMAGE DEALT TO PLAYER
-00002326  0C52 0001                381      CMP     #1,(A2)             IF BOSS HEALTH IS BELOW 1, PLAYER WINS
-0000232A  6D00 008C                382      BLT     WIN_FIGHT
-0000232E  0C54 0001                383      CMP     #1,(A4)             IF PLAYER HEALTH IS BELOW 1, PLAYER LOSES
-00002332  6D00 00DE                384      BLT     LOSE_FIGHT
-00002336  6100 012C                385      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
-0000233A  6100 0168                386      BSR     ENDL
-0000233E  6100 FEA6                387      BSR     TEMPERATURE
-00002342  6100 0160                388      BSR     ENDL
-00002346  6100 FF4E                389      BSR     PLAYER_TURN         BRANCH TO PLAYER TURN SUBROUTINE
-0000234A  4E75                     390      RTS                         RETURN FROM BOSS_TURN: SUBROUTINE
-0000234C                           391  
-0000234C                           392  *-------------------------------------------------------
-0000234C                           393  *------------------ATTACKING THE BOSS-------------------
-0000234C                           394  *-------------------------------------------------------
-0000234C                           395  ATTACK:
-0000234C  6100 03F8                396      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-00002350  6100 0112                397      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002354  43F9 00002D80            398      LEA     ATTACK_MSG,A1           DISPLAYS THE ATTACK MESSAGE
-0000235A  303C 000E                399      MOVE    #14,D0
-0000235E  4E4F                     400      TRAP    #15
-00002360  6100 0102                401      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002364  6100 013E                402      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002368  1A3C 0019                403      MOVE.B  #DAMAGE,D5              THIS IS THE PLAYERS DAMAGE
-0000236C  9B12                     404      SUB.B   D5,(A2)
-0000236E  0C52 0001                405      CMP     #1,(A2)
-00002372  6D00 0044                406      BLT     WIN_FIGHT
-00002376  0C54 0001                407      CMP     #1,(A4)
-0000237A  6D00 0096                408      BLT     LOSE_FIGHT
-0000237E  43F9 00002E76            409      LEA     SHOW_BOSS_HEALTH,A1     DISPLAYS THE SHOW BOSS HEALTH MESSAGE
-00002384  303C 000E                410      MOVE    #14,D0
-00002388  4E4F                     411      TRAP    #15
-0000238A  1212                     412      MOVE.B  (A2),D1
-0000238C  103C 0003                413      MOVE.B  #3,D0
-00002390  4E4F                     414      TRAP    #15
-00002392  6100 0110                415      BSR     ENDL
-00002396  6100 010C                416      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000239A  6100 00C8                417      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-0000239E  6100 0104                418      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000023A2  0C52 0001                419      CMP     #1,(A2)
-000023A6  6D00 0010                420      BLT     WIN_FIGHT
-000023AA  0C54 0001                421      CMP     #1,(A4)
-000023AE  6D00 0062                422      BLT     LOSE_FIGHT
-000023B2                           423      
-000023B2  6100 FF32                424      BSR     BOSS_TURN               BRANCH TO BOSS TURN SUBROUTINE
-000023B6  4E75                     425      RTS                             RETURN FROM ATTACK: SUBROUTINE
-000023B8                           426      
-000023B8                           427  WIN_FIGHT:
-000023B8  6100 FEC2                428      BSR     SHOW_HEALTH             DISPLAYS HEALTH ON SCREEN
-000023BC  0616 0032                429      ADD.B   #50,(A6)                GIVES THE PLAYER 50 GOLD FOR DEFEATING BOSS / COMPLETING THE QUEST
-000023C0  6100 00E2                430      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000023C4  6100 009E                431      BSR     DECORATE
-000023C8  6100 FE1C                432      BSR     TEMPERATURE
-000023CC  6100 00D6                433      BSR     ENDL
-000023D0  6100 FDF6                434      BSR     GOLD                    DISPLAYS MONEY ON SCREEN
-000023D4  6100 00CE                435      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000023D8  43F9 00002F2E            436      LEA     WIN_GOLD_MSG,A1         DISPLAYS THE WIN GOLD MESSAGE
-000023DE  103C 000E                437      MOVE.B  #14,D0
-000023E2  4E4F                     438      TRAP    #15
-000023E4  6100 007E                439      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-000023E8  6100 00BA                440      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000023EC  43F9 00002EF2            441      LEA     WIN_MSG,A1              DISPLAYS THE WINNING MESSAGE
-000023F2  103C 000E                442      MOVE.B  #14,D0
-000023F6  4E4F                     443      TRAP    #15
-000023F8  6100 00AA                444      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000023FC  6100 00A6                445      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002400  6100 0062                446      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002404  18BC 0064                447      MOVE.B  #100,(A4)               REPLENISHES PLAYER HEALTH
-00002408  14BC 0050                448      MOVE.B  #80,(A2)                REPLENISHES MINI BOSS HEALTH
-0000240C  6100 0070                449      BSR     REPLAY_GAME             BRANCH TO REPLAY GAME SUBROUTINE
-00002410  4E75                     450      RTS                             RETURN FROM WIN_FIGHT: SUBROUTINE
-00002412                           451       
-00002412                           452  LOSE_FIGHT:
-00002412  6100 0050                453      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002416  6100 008C                454      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000241A  6100 0048                455      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-0000241E  18BC 0000                456      MOVE.B  #0,(A4)                 SHOWS PLAYER HEALTH IS 0 BEFORE IT REPLENISHES THE HEALTH TO 100 IF REPLAY IS ENTERED
-00002422  6100 FE58                457      BSR     SHOW_HEALTH             BRANCH TO SHOW HEALTH SUBROUTINE
-00002426  6100 FE36                458      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-0000242A  6100 FDD2                459      BSR     WINDMILL                BRANCH TO WINDMILL INPUT SUBROUTINE
-0000242E  6100 FDEE                460      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL INPUT SUBROUTINE
-00002432  6100 FE0A                461      BSR     TREES                   BRANCH TO TREES INPUT SUBROUTINE
-00002436  6100 002C                462      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-0000243A  6100 0068                463      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000243E  43F9 00002EC0            464      LEA     LOSE_MSG,A1             DISPLAYS THE LOSE MESSAGE 
-00002444  103C 000E                465      MOVE.B  #14,D0
-00002448  4E4F                     466      TRAP    #15
-0000244A  6100 0058                467      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000244E  6100 0054                468      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002452  6100 0010                469      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002456  18BC 0064                470      MOVE.B  #100,(A4)               REPLENISHES PLAYER HEALTH
-0000245A  14BC 0050                471      MOVE.B  #80,(A2)                REPLENISHES MINI BOSS HEALTH
-0000245E  6100 001E                472      BSR     REPLAY_GAME             BRANCH TO REPLAY GAME SUBROUTINE
-00002462  4E75                     473      RTS                             RETURN FROM LOSE_FIGHT: SUBROUTINE
-00002464                           474  
-00002464                           475  *-------------------------------------------------------
-00002464                           476  *------------------SCREEN DECORATION--------------------
-00002464                           477  *-------------------------------------------------------
-00002464                           478  DECORATE:
-00002464  163C 003C                479      MOVE.B  #60, D3
-00002468                           480  OUT:
-00002468  43F9 00002DAA            481      LEA     LOOP_MSG,A1             DISPLAYS THE LOOP MESSAGE
-0000246E  103C 000E                482      MOVE.B  #14,D0
-00002472  4E4F                     483      TRAP    #15
-00002474  5343                     484      SUB     #1,D3                   DECREMENT LOOP COUNTER
-00002476  66F0                     485      BNE     OUT                     REPEAT UNTIL D0=0
-00002478  6100 002A                486      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000247C  4E75                     487      RTS                             RETURN FROM OUT: SUBROUTINE
-0000247E                           488      
-0000247E                           489  *-------------------------------------------------------
-0000247E                           490  *----------------------REPLAY GAME----------------------
-0000247E                           491  *-------------------------------------------------------
-0000247E                           492  REPLAY_GAME:
-0000247E  6100 0024                493      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002482  43F9 00002DAC            494      LEA     REPLAY_MSG,A1           DISPLAYS THE REPLAY MESSAGE
-00002488  103C 000E                495      MOVE.B  #14,D0
-0000248C  4E4F                     496      TRAP    #15
-0000248E                           497      
-0000248E  103C 0004                498      MOVE.B  #4,D0
-00002492  4E4F                     499      TRAP    #15
-00002494                           500  
-00002494  B27C 0000                501      CMP     #EXIT,D1
-00002498  6700 FB6C                502      BEQ     END                     IF SR Z REGISTER CONTAINS 1 BEQ => BRANCH EQUALS
-0000249C  6100 02A8                503      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-000024A0  6100 FB82                504      BSR     INPUT                   RETURN FROM REPLAY: SUBROUTINE
-000024A4                           505  
-000024A4                           506  *-------------------------------------------------------
-000024A4                           507  *-------------ENDL (SKIP LINE IN GAME)------------------
-000024A4                           508  *-------------------------------------------------------
-000024A4                           509  ENDL:                               
-000024A4  48E7 8040                510      MOVEM.L D0/A1,-(A7)
-000024A8  303C 000E                511      MOVE    #14,D0
-000024AC  43F9 000036A4            512      LEA     CRLF,A1
-000024B2  4E4F                     513      TRAP    #15
-000024B4  4CDF 0201                514      MOVEM.L (A7)+,D0/A1
-000024B8  4E75                     515      RTS                             RETURN FROM ENDL: SUBROUTINE
-000024BA                           516  
-000024BA                           517  *-------------------------------------------------------
-000024BA                           518  *-------------------SHOP OPTIONS------------------------
-000024BA                           519  *-------------------------------------------------------
-000024BA                           520  SHOP:
-000024BA  6100 028A                521      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-000024BE  43F9 00002FF0            522      LEA     SHOP_WELCOME,A1             DISPLAYS THE SHOP MESSAGE MESSAGE
-000024C4  103C 000E                523      MOVE.B  #14,D0
-000024C8  4E4F                     524      TRAP    #15
-000024CA  61D8                     525      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000024CC  6196                     526      BSR     DECORATE
-000024CE  6100 FD16                527      BSR     TEMPERATURE
-000024D2  61D0                     528      BSR     ENDL
-000024D4  618E                     529      BSR     DECORATE
-000024D6  61CC                     530      BSR     ENDL
-000024D8  6100 FCEE                531      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-000024DC  6186                     532      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-000024DE  61C4                     533      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000024E0  6100 0004                534      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-000024E4  4E75                     535      RTS                             RETURN FROM SHOP: SUBROUTINE
-000024E6                           536      
-000024E6                           537  SHOP_MESSAGE:
-000024E6  43F9 00003263            538      LEA     PRICE_MSG,A1            DISPLAYS THE PRICE MESSAGE
-000024EC  103C 000E                539      MOVE.B  #14,D0
-000024F0  4E4F                     540      TRAP    #15
-000024F2  103C 0004                541      MOVE.B  #4,D0   
-000024F6  4E4F                     542      TRAP    #15
-000024F8                           543      
-000024F8  3001                     544      MOVE    D1,D0                   GETS INPUT FROM PLAYER AND LETS BUY STUFF
-000024FA  B27C 0001                545      CMP     #1,D1
-000024FE  6600 0060                546      BNE     WEAPON_ITEM             IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
-00002502                           547      
-00002502  183C 000A                548      MOVE.B  #POTION_PRICE,D4        
-00002506  1C16                     549      MOVE.B  (A6),D6
-00002508  BC44                     550      CMP     D4,D6
-0000250A  6C00 0248                551      BGE     ADD_POTION              IF MONEY IS GREATER OR EQUAL TO PRICE OF POTION,CAN BUY POTION
-0000250E  43F9 00003474            552      LEA     NO_MONEY_POTION,A1      DISPLAYS THE NO MONEY FOR POTION MESSAGE
-00002514  103C 000E                553      MOVE.B  #14,D0
-00002518  4E4F                     554      TRAP    #15
-0000251A  43F9 00002CE4            555      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
-00002520  103C 000E                556      MOVE.B  #14,D0 
-00002524  4E4F                     557      TRAP    #15
-00002526  103C 0004                558      MOVE.B  #4,D0
-0000252A  4E4F                     559      TRAP    #15
-0000252C  6100 0218                560      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-00002530  6100 FF32                561      BSR     DECORATE
-00002534  6100 FCB0                562      BSR     TEMPERATURE
-00002538  6100 FF6A                563      BSR     ENDL
-0000253C  6100 FF26                564      BSR     DECORATE
-00002540  6100 FF62                565      BSR     ENDL
-00002544  6100 FC82                566      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-00002548  6100 FCB4                567      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
-0000254C  6100 FCD0                568      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-00002550  6100 FCEC                569      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-00002554  6100 FD08                570      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-00002558  6100 FC02                571      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-0000255C  6188                     572      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-0000255E  4E75                     573      RTS                             RETURN FROM SHOP_MESSAGE: SUBROUTINE               
-00002560                           574      
-00002560                           575  WEAPON_ITEM:
-00002560  B27C 0002                576      CMP     #2,D1
-00002564  6600 006C                577      BNE     WINDMILL_ITEM
-00002568                           578      
-00002568  1A3C 0064                579      MOVE.B  #WEAPON_PRICE,D5
-0000256C  1C16                     580      MOVE.B  (A6),D6
-0000256E  1815                     581      MOVE.B  (A5),D4
-00002570  B87C 0003                582      CMP     #MAX_WEAPON_LEVEL,D4
-00002574  6700 019A                583      BEQ     MAX_LEVEL               IF MONEY IS EQUAL TO MAX NUMBER OF UPGRADES, CAN'T BUY WEAPON UPGRADE
-00002578  BC45                     584      CMP     D5,D6
-0000257A  6C00 0226                585      BGE     ADD_WEAPON              IF MONEY IS GREATER OR EQUAL TO PRICE OF WEAPON,CAN BUY WEAPON UPGRADE
-0000257E  43F9 0000349B            586      LEA     NO_MONEY_WEAPON,A1      DISPLAYS THE NO MONEY FOR WEAPON UPGRADE MESSAGE
-00002584  103C 000E                587      MOVE.B  #14,D0
-00002588  4E4F                     588      TRAP    #15
-0000258A  43F9 00002CE4            589      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
-00002590  103C 000E                590      MOVE.B  #14,D0 
-00002594  4E4F                     591      TRAP    #15
-00002596  103C 0004                592      MOVE.B  #4,D0
-0000259A  4E4F                     593      TRAP    #15
-0000259C  6100 01A8                594      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-000025A0  6100 FEC2                595      BSR     DECORATE
-000025A4  6100 FC40                596      BSR     TEMPERATURE
-000025A8  6100 FEFA                597      BSR     ENDL
-000025AC  6100 FEB6                598      BSR     DECORATE
-000025B0  6100 FEF2                599      BSR     ENDL
-000025B4  6100 FC12                600      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-000025B8  6100 FC44                601      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
-000025BC  6100 FC60                602      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-000025C0  6100 FC7C                603      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-000025C4  6100 FC98                604      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-000025C8  6100 FB92                605      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-000025CC  6100 FF18                606      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-000025D0  4E75                     607      RTS                             RETURN FROM WEAPON_ITEM: SUBROUTINE
-000025D2                           608   
-000025D2                           609  WINDMILL_ITEM:
-000025D2  B27C 0003                610      CMP     #3,D1
-000025D6  6600 0064                611      BNE     SOLAR_PANEL_ITEM
-000025DA                           612  
-000025DA  1A3C 0064                613      MOVE.B  #WINDMILL_PRICE,D5
-000025DE  1C16                     614      MOVE.B  (A6),D6
-000025E0  1815                     615      MOVE.B  (A5),D4
-000025E2  BC45                     616      CMP     D5,D6
-000025E4  6C00 020A                617      BGE     ADD_WINDMILL            IF MONEY IS GREATER OR EQUAL TO PRICE OF WINDMILL,CAN BUY
-000025E8  43F9 000034CA            618      LEA     NO_MONEY_WINDMILL,A1    DISPLAYS THE NO MONEY FOR WINDMILL MESSAGE
-000025EE  103C 000E                619      MOVE.B  #14,D0
-000025F2  4E4F                     620      TRAP    #15
-000025F4  43F9 00002CE4            621      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
-000025FA  103C 000E                622      MOVE.B  #14,D0 
-000025FE  4E4F                     623      TRAP    #15
-00002600  103C 0004                624      MOVE.B  #4,D0
-00002604  4E4F                     625      TRAP    #15
-00002606  6100 013E                626      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-0000260A  6100 FE58                627      BSR     DECORATE
-0000260E  6100 FBD6                628      BSR     TEMPERATURE
-00002612  6100 FE90                629      BSR     ENDL
-00002616  6100 FE4C                630      BSR     DECORATE
-0000261A  6100 FE88                631      BSR     ENDL
-0000261E  6100 FBA8                632      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-00002622  6100 FBDA                633      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE  
-00002626  6100 FBF6                634      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE    
-0000262A  6100 FC12                635      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-0000262E  6100 FC2E                636      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-00002632  6100 FB28                637      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE         
-00002636  6100 FEAE                638      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-0000263A  4E75                     639      RTS                             RETURN FROM WINDMILL_ITEM: SUBROUTINE           
-0000263C                           640      
-0000263C                           641  SOLAR_PANEL_ITEM:
-0000263C  B27C 0004                642      CMP     #4,D1
-00002640  6600 0064                643      BNE     TREE_ITEM
-00002644                           644  
-00002644  1A3C 0032                645      MOVE.B  #SOLARPANEL_PRICE,D5
-00002648  1C16                     646      MOVE.B  (A6),D6
-0000264A  1815                     647      MOVE.B  (A5),D4
-0000264C  BC45                     648      CMP     D5,D6
-0000264E  6C00 01F6                649      BGE     ADD_SOLARPANEL          IF MONEY IS GREATER OR EQUAL TO PRICE OF SOLAR PANEL,CAN BUY
-00002652  43F9 000034F3            650      LEA     NO_MONEY_SOLARPANEL,A1  DISPLAYS THE NO MONEY FOR SOLAR PANEL MESSAGE
-00002658  103C 000E                651      MOVE.B  #14,D0
-0000265C  4E4F                     652      TRAP    #15
-0000265E  43F9 00002CE4            653      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
-00002664  103C 000E                654      MOVE.B  #14,D0 
-00002668  4E4F                     655      TRAP    #15
-0000266A  103C 0004                656      MOVE.B  #4,D0
-0000266E  4E4F                     657      TRAP    #15
-00002670  6100 00D4                658      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-00002674  6100 FDEE                659      BSR     DECORATE
-00002678  6100 FB6C                660      BSR     TEMPERATURE
-0000267C  6100 FE26                661      BSR     ENDL
-00002680  6100 FDE2                662      BSR     DECORATE
-00002684  6100 FE1E                663      BSR     ENDL
-00002688  6100 FB3E                664      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-0000268C  6100 FB70                665      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
-00002690  6100 FB8C                666      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE  
-00002694  6100 FBA8                667      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-00002698  6100 FBC4                668      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-0000269C  6100 FABE                669      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE          
-000026A0  6100 FE44                670      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-000026A4  4E75                     671      RTS                             RETURN FROM SOLAR_PANEL_ITEM: SUBROUTINE
-000026A6                           672      
-000026A6                           673  TREE_ITEM:
-000026A6  B27C 0005                674      CMP     #5,D1
-000026AA  6600 F954                675      BNE     GAME
-000026AE                           676  
-000026AE  1A3C 0019                677      MOVE.B  #TREES_PRICE,D5
-000026B2  1C16                     678      MOVE.B  (A6),D6
-000026B4  1815                     679      MOVE.B  (A5),D4
-000026B6  BC45                     680      CMP     D5,D6
-000026B8  6C00 01E2                681      BGE     ADD_TREES               IF MONEY IS GREATER OR EQUAL TO PRICE OF TREE,CAN BUY
-000026BC  43F9 0000351F            682      LEA     NO_MONEY_TREES,A1       DISPLAYS THE NO MONEY FOR TREES MESSAGE
-000026C2  103C 000E                683      MOVE.B  #14,D0
-000026C6  4E4F                     684      TRAP    #15
-000026C8  43F9 00002CE4            685      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
-000026CE  103C 000E                686      MOVE.B  #14,D0 
-000026D2  4E4F                     687      TRAP    #15
-000026D4  103C 0004                688      MOVE.B  #4,D0
-000026D8  4E4F                     689      TRAP    #15
-000026DA  6100 006A                690      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-000026DE  6100 FD84                691      BSR     DECORATE
-000026E2  6100 FB02                692      BSR     TEMPERATURE
-000026E6  6100 FDBC                693      BSR     ENDL
-000026EA  6100 FD78                694      BSR     DECORATE
-000026EE  6100 FDB4                695      BSR     ENDL
-000026F2  6100 FAD4                696      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-000026F6  6100 FB06                697      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
-000026FA  6100 FB22                698      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-000026FE  6100 FB3E                699      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-00002702  6100 FB5A                700      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-00002706  6100 FA54                701      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE         
-0000270A  6100 FDDA                702      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-0000270E  4E75                     703      RTS                             RETURN FROM TREE_ITEM: SUBROUTINE
-00002710                           704      
-00002710                           705  MAX_LEVEL:
-00002710  6100 0034                706      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-00002714  6100 FD4E                707      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002718  6100 FD8A                708      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000271C  43F9 00003441            709      LEA     MAX_UPGRADE,A1          DISPLAYS THE MAX UPGRADE MESSAGE
-00002722  103C 000E                710      MOVE.B  #14,D0 
-00002726  4E4F                     711      TRAP    #15
-00002728  6100 FA9E                712      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-0000272C  6100 FAD0                713      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
-00002730  6100 FAEC                714      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-00002734  6100 FB08                715      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-00002738  6100 FB24                716      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-0000273C  6100 FA1E                717      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-00002740  6100 FDA4                718      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-00002744  4E75                     719      RTS                             RETURN FROM CANT_ADD: SUBROUTINE
-00002746                           720      
-00002746                           721  CLEAR_SCREEN:
-00002746  323C FF00                722      MOVE.W      #$FF00,d1           CLEAR SCREEN
-0000274A  700B                     723      MOVEQ       #11,d0          
-0000274C  4E4F                     724      TRAP        #15
-0000274E  323C 0000                725      MOVE.W      #0,d1               PUT 0 INTO D1 SO IT DOESNT AFFECT ANY STORED DATA
-00002752  4E75                     726      RTS
+000021FE                           260   
+000021FE                           261  *-------------------------------------------------------
+000021FE                           262  *--------------------Windmill display-------------------
+000021FE                           263  *-------------------------------------------------------
+000021FE                           264  WINDMILL:
+000021FE  6100 0264                265      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+00002202  43F9 00002BAE            266      LEA     WINDMILL_MSG,A1     DISPLAYS THE WINDMILL MESSAGE
+00002208  103C 000E                267      MOVE.B  #14,D0
+0000220C  4E4F                     268      TRAP    #15
+0000220E  1238 0FD0                269      MOVE.B  (4048),D1
+00002212  103C 0003                270      MOVE.B  #3,D0
+00002216  4E4F                     271      TRAP    #15
+00002218  6100 028A                272      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+0000221C  4E75                     273      RTS                         RETURN FROM WINDMILL: SUBROUTINE
+0000221E                           274    
+0000221E                           275  *-------------------------------------------------------
+0000221E                           276  *--------------------Solar Panel display----------------
+0000221E                           277  *-------------------------------------------------------
+0000221E                           278  SOLAR_PANEL:
+0000221E  6100 0284                279      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+00002222  43F9 00002BBF            280      LEA     SOLAR_PANEL_MSG,A1  DISPLAYS THE SOLAR PANEL MESSAGE
+00002228  103C 000E                281      MOVE.B  #14,D0
+0000222C  4E4F                     282      TRAP    #15
+0000222E  1238 0FDA                283      MOVE.B  (4058),D1
+00002232  103C 0003                284      MOVE.B  #3,D0
+00002236  4E4F                     285      TRAP    #15
+00002238  6100 026A                286      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+0000223C  4E75                     287      RTS                         RETURN FROM SOLAR_PANEL: SUBROUTINE
+0000223E                           288  
+0000223E                           289  *-------------------------------------------------------
+0000223E                           290  *--------------------Trees display----------------------
+0000223E                           291  *-------------------------------------------------------
+0000223E                           292  TREES:
+0000223E  6100 0264                293      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+00002242  43F9 00002BD3            294      LEA     TREES_MSG,A1        DISPLAYS THE TREES MESSAGE
+00002248  103C 000E                295      MOVE.B  #14,D0
+0000224C  4E4F                     296      TRAP    #15
+0000224E  1238 0FE4                297      MOVE.B  (4068),D1
+00002252  103C 0003                298      MOVE.B  #3,D0
+00002256  4E4F                     299      TRAP    #15
+00002258  6100 024A                300      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+0000225C  4E75                     301      RTS                         RETURN FROM TREES: SUBROUTINE
+0000225E                           302  
+0000225E                           303  *-------------------------------------------------------
+0000225E                           304  *--------------------POTION DISPLAY---------------------
+0000225E                           305  *-------------------------------------------------------
+0000225E                           306  POTIONS:
+0000225E  6100 0244                307      BSR     ENDL                BRANCH TO ENDL SUBROUTINE   
+00002262  43F9 00002BE0            308      LEA     POTIONS_MSG,A1      DISPLAYS THE POTIONS MESSAGE
+00002268  103C 000E                309      MOVE.B  #14,D0
+0000226C  4E4F                     310      TRAP    #15
+0000226E  1213                     311      MOVE.B  (A3),D1
+00002270  103C 0003                312      MOVE.B  #3,D0
+00002274  4E4F                     313      TRAP    #15
+00002276  6100 022C                314      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+0000227A  4E75                     315      RTS                         RETURN FROM POTIONS: SUBROUTINE
+0000227C                           316        
+0000227C                           317  *-------------------------------------------------------
+0000227C                           318  *--------------------PLAYER HEALTH----------------------
+0000227C                           319  *-------------------------------------------------------
+0000227C                           320  SHOW_HEALTH:
+0000227C  43F9 00002C19            321      LEA     HEALTH_MSG,A1       DISPLAYS THE HEALTH MESSAGE
+00002282  103C 000E                322      MOVE.B  #14,D0
+00002286  4E4F                     323      TRAP    #15
+00002288  1214                     324      MOVE.B  (A4),D1
+0000228A  103C 0003                325      MOVE.B  #3,D0
+0000228E  4E4F                     326      TRAP    #15
+00002290  6100 0212                327      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+00002294  4E75                     328      RTS                         RETURN FROM SHOW_HEALTH: SUBROUTINE
+00002296                           329      
+00002296                           330  *-------------------------------------------------------
+00002296                           331  *-----------------PLAYER FIGHTING OPTIONS----------------
+00002296                           332  *-------------------------------------------------------- 
+00002296                           333  PLAYER_TURN:
+00002296  6100 020C                334      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+0000229A  6100 01C8                335      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+0000229E  61DC                     336      BSR     SHOW_HEALTH         BRANCH TO SHOW HEALTH SUBROUTINE
+000022A0  61BC                     337      BSR     POTIONS             BRANCH TO POTIONS SUBROUTINE
+000022A2  6100 FF5A                338      BSR     WINDMILL            BRANCH TO WINDMILL INPUT SUBROUTINE
+000022A6  6100 FF76                339      BSR     SOLAR_PANEL         BRANCH TO SOLAR PANEL INPUT SUBROUTINE
+000022AA  6192                     340      BSR     TREES               BRANCH TO TREES INPUT SUBROUTINE
+000022AC  6100 01B6                341      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+000022B0  0C52 0001                342      CMP     #1,(A2)
+000022B4  6D00 0102                343      BLT     WIN_FIGHT
+000022B8  0C54 0001                344      CMP     #1,(A4)
+000022BC  6D00 0154                345      BLT     LOSE_FIGHT
+000022C0  43F9 00002D2F            346      LEA     PLAYEROPTION_MSG,A1 DISPLAYS THE PLAYER OPTION MESSAGE
+000022C6  103C 000E                347      MOVE.B  #14,D0
+000022CA  4E4F                     348      TRAP    #15
+000022CC  103C 0004                349      MOVE.B  #4,D0               READ A NUMBER FROM THE KEYBOARD
+000022D0  4E4F                     350      TRAP    #15
+000022D2                           351      
+000022D2  3001                     352      MOVE    D1,D0               GETS INPUT FROM PLAYER AND LET CHOOSE OPTION
+000022D4  B27C 0001                353      CMP     #1,D1
+000022D8  6600 FDD8                354      BNE     POTION_CHOICE       IF OPTION 1 NOT CHOSEN, MOVE POTION CHOICE
+000022DC  6100 0186                355      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+000022E0  6100 006A                356      BSR     ATTACK              BRANCH TO ATTACK SUBROUTINE
+000022E4  4E75                     357      RTS                         RETURN FROM PLAYER_TURN: SUBROUTINE
+000022E6                           358      
+000022E6                           359    
+000022E6                           360  *-------------------------------------------------------
+000022E6                           361  *---------------------BOSS TURN-------------------------
+000022E6                           362  *------------------------------------------------------- 
+000022E6                           363  BOSS_TURN:
+000022E6  6100 01BC                364      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+000022EA  6100 0178                365      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+000022EE  43F9 00002D00            366      LEA     BOSS_MSG,A1         DISPLAYS THE BOSS MESSAGE
+000022F4  103C 000E                367      MOVE.B  #14,D0
+000022F8  4E4F                     368      TRAP    #15
+000022FA  43F9 00002E83            369      LEA     LOSE_RESOURCES_MSG,A1   
+00002300  103C 000E                370      MOVE.B  #14,D0              DISPLAYS THE LOSE RESOURCES MESSAGE
+00002304  4E4F                     371      TRAP    #15
+00002306  43F9 00002F8C            372      LEA     GAIN_TEMP,A1        DISPLAYS THE GAIN TEMPERATURE MESSAGE
+0000230C  103C 000E                373      MOVE.B  #14,D0
+00002310  4E4F                     374      TRAP    #15
+00002312  5438 0FEE                375      ADD.B   #2,4078             ADD 2 DEGREES CELSIUS TO THE TEMPERATURE
+00002316  5338 0FD0                376      SUB.B   #1,4048             1 WINDMILL DESTROYED
+0000231A  5338 0FDA                377      SUB.B   #1,4058             1 SOLAR PANEL DESTROYED
+0000231E  5538 0FE4                378      SUB.B   #2,4068             2 TREES DESTROYED
+00002322  0414 0023                379      SUB.B   #35,(A4)            BOSS DAMAGE DEALT TO PLAYER
+00002326  0C52 0001                380      CMP     #1,(A2)             IF BOSS HEALTH IS BELOW 1, PLAYER WINS
+0000232A  6D00 008C                381      BLT     WIN_FIGHT
+0000232E  0C54 0001                382      CMP     #1,(A4)             IF PLAYER HEALTH IS BELOW 1, PLAYER LOSES
+00002332  6D00 00DE                383      BLT     LOSE_FIGHT
+00002336  6100 012C                384      BSR     DECORATE            BRANCH TO DECORATE SUBROUTINE
+0000233A  6100 0168                385      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+0000233E  6100 FEA6                386      BSR     TEMPERATURE         BRANCH TO TEMPERATURE SUBROUTINE
+00002342  6100 0160                387      BSR     ENDL                BRANCH TO ENDL SUBROUTINE
+00002346  6100 FF4E                388      BSR     PLAYER_TURN         BRANCH TO PLAYER TURN SUBROUTINE
+0000234A  4E75                     389      RTS                         RETURN FROM BOSS_TURN: SUBROUTINE
+0000234C                           390  
+0000234C                           391  *-------------------------------------------------------
+0000234C                           392  *------------------ATTACKING THE BOSS-------------------
+0000234C                           393  *-------------------------------------------------------
+0000234C                           394  ATTACK:
+0000234C  6100 03F8                395      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+00002350  6100 0112                396      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002354  43F9 00002D80            397      LEA     ATTACK_MSG,A1           DISPLAYS THE ATTACK MESSAGE
+0000235A  303C 000E                398      MOVE    #14,D0
+0000235E  4E4F                     399      TRAP    #15
+00002360  6100 0102                400      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002364  6100 013E                401      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002368  1A3C 0019                402      MOVE.B  #DAMAGE,D5              THIS IS THE PLAYERS DAMAGE
+0000236C  9B12                     403      SUB.B   D5,(A2)
+0000236E  0C52 0001                404      CMP     #1,(A2)
+00002372  6D00 0044                405      BLT     WIN_FIGHT
+00002376  0C54 0001                406      CMP     #1,(A4)
+0000237A  6D00 0096                407      BLT     LOSE_FIGHT
+0000237E  43F9 00002E76            408      LEA     SHOW_BOSS_HEALTH,A1     DISPLAYS THE SHOW BOSS HEALTH MESSAGE
+00002384  303C 000E                409      MOVE    #14,D0
+00002388  4E4F                     410      TRAP    #15
+0000238A  1212                     411      MOVE.B  (A2),D1                 INDIRECT ADDRESSING
+0000238C  103C 0003                412      MOVE.B  #3,D0
+00002390  4E4F                     413      TRAP    #15
+00002392  6100 0110                414      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002396  6100 010C                415      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000239A  6100 00C8                416      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+0000239E  6100 0104                417      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000023A2  0C52 0001                418      CMP     #1,(A2)
+000023A6  6D00 0010                419      BLT     WIN_FIGHT
+000023AA  0C54 0001                420      CMP     #1,(A4)
+000023AE  6D00 0062                421      BLT     LOSE_FIGHT
+000023B2                           422      
+000023B2  6100 FF32                423      BSR     BOSS_TURN               BRANCH TO BOSS TURN SUBROUTINE
+000023B6  4E75                     424      RTS                             RETURN FROM ATTACK: SUBROUTINE
+000023B8                           425      
+000023B8                           426  WIN_FIGHT:
+000023B8  6100 FEC2                427      BSR     SHOW_HEALTH             DISPLAYS HEALTH ON SCREEN
+000023BC  0616 0032                428      ADD.B   #50,(A6)                GIVES THE PLAYER 50 GOLD FOR DEFEATING BOSS / COMPLETING THE QUEST
+000023C0  6100 00E2                429      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000023C4  6100 009E                430      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000023C8  6100 FE1C                431      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+000023CC  6100 00D6                432      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000023D0  6100 FDF6                433      BSR     GOLD                    DISPLAYS MONEY ON SCREEN
+000023D4  6100 00CE                434      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000023D8  43F9 00002F2E            435      LEA     WIN_GOLD_MSG,A1         DISPLAYS THE WIN GOLD MESSAGE
+000023DE  103C 000E                436      MOVE.B  #14,D0
+000023E2  4E4F                     437      TRAP    #15
+000023E4  6100 007E                438      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000023E8  6100 00BA                439      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000023EC  43F9 00002EF2            440      LEA     WIN_MSG,A1              DISPLAYS THE WINNING MESSAGE
+000023F2  103C 000E                441      MOVE.B  #14,D0
+000023F6  4E4F                     442      TRAP    #15
+000023F8  6100 00AA                443      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000023FC  6100 00A6                444      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002400  6100 0062                445      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002404  18BC 0064                446      MOVE.B  #100,(A4)               REPLENISHES PLAYER HEALTH
+00002408  14BC 0050                447      MOVE.B  #80,(A2)                REPLENISHES MINI BOSS HEALTH
+0000240C  6100 0070                448      BSR     REPLAY_GAME             BRANCH TO REPLAY GAME SUBROUTINE
+00002410  4E75                     449      RTS                             RETURN FROM WIN_FIGHT: SUBROUTINE
+00002412                           450       
+00002412                           451  LOSE_FIGHT:
+00002412  6100 0050                452      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002416  6100 008C                453      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000241A  6100 0048                454      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+0000241E  18BC 0000                455      MOVE.B  #0,(A4)                 SHOWS PLAYER HEALTH IS 0 BEFORE IT REPLENISHES THE HEALTH TO 100 IF REPLAY IS ENTERED
+00002422  6100 FE58                456      BSR     SHOW_HEALTH             BRANCH TO SHOW HEALTH SUBROUTINE
+00002426  6100 FE36                457      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+0000242A  6100 FDD2                458      BSR     WINDMILL                BRANCH TO WINDMILL INPUT SUBROUTINE
+0000242E  6100 FDEE                459      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL INPUT SUBROUTINE
+00002432  6100 FE0A                460      BSR     TREES                   BRANCH TO TREES INPUT SUBROUTINE
+00002436  6100 002C                461      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+0000243A  6100 0068                462      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000243E  43F9 00002EC0            463      LEA     LOSE_MSG,A1             DISPLAYS THE LOSE MESSAGE 
+00002444  103C 000E                464      MOVE.B  #14,D0
+00002448  4E4F                     465      TRAP    #15
+0000244A  6100 0058                466      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000244E  6100 0054                467      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002452  6100 0010                468      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002456  18BC 0064                469      MOVE.B  #100,(A4)               REPLENISHES PLAYER HEALTH
+0000245A  14BC 0050                470      MOVE.B  #80,(A2)                REPLENISHES MINI BOSS HEALTH
+0000245E  6100 001E                471      BSR     REPLAY_GAME             BRANCH TO REPLAY GAME SUBROUTINE
+00002462  4E75                     472      RTS                             RETURN FROM LOSE_FIGHT: SUBROUTINE
+00002464                           473  
+00002464                           474  *-------------------------------------------------------
+00002464                           475  *------------------SCREEN DECORATION--------------------
+00002464                           476  *-------------------------------------------------------
+00002464                           477  DECORATE:
+00002464  163C 003C                478      MOVE.B  #60, D3                 MOVE 60 INTO D3
+00002468                           479  OUT:
+00002468  43F9 00002DAA            480      LEA     LOOP_MSG,A1             DISPLAYS THE LOOP MESSAGE
+0000246E  103C 000E                481      MOVE.B  #14,D0
+00002472  4E4F                     482      TRAP    #15
+00002474  5343                     483      SUB     #1,D3                   DECREMENT LOOP COUNTER
+00002476  66F0                     484      BNE     OUT                     REPEAT UNTIL D0=0
+00002478  6100 002A                485      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000247C  4E75                     486      RTS                             RETURN FROM OUT: SUBROUTINE
+0000247E                           487      
+0000247E                           488  *-------------------------------------------------------
+0000247E                           489  *----------------------REPLAY GAME----------------------
+0000247E                           490  *-------------------------------------------------------
+0000247E                           491  REPLAY_GAME:
+0000247E  6100 0024                492      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002482  43F9 00002DAC            493      LEA     REPLAY_MSG,A1           DISPLAYS THE REPLAY MESSAGE
+00002488  103C 000E                494      MOVE.B  #14,D0
+0000248C  4E4F                     495      TRAP    #15
+0000248E                           496      
+0000248E  103C 0004                497      MOVE.B  #4,D0                   READ A NUMBER FROM THE KEYBOARD
+00002492  4E4F                     498      TRAP    #15
+00002494                           499  
+00002494  B27C 0000                500      CMP     #EXIT,D1
+00002498  6700 FB6C                501      BEQ     END                     IF SR Z REGISTER CONTAINS 1 BEQ => BRANCH EQUALS
+0000249C  6100 02A8                502      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+000024A0  6100 FB82                503      BSR     INPUT                   
+000024A4                           504  
+000024A4                           505  *-------------------------------------------------------
+000024A4                           506  *-------------ENDL (SKIP LINE IN GAME)------------------
+000024A4                           507  *-------------------------------------------------------
+000024A4                           508  ENDL:                               
+000024A4  48E7 8040                509      MOVEM.L D0/A1,-(A7)
+000024A8  303C 000E                510      MOVE    #14,D0
+000024AC  43F9 000036A4            511      LEA     CRLF,A1
+000024B2  4E4F                     512      TRAP    #15
+000024B4  4CDF 0201                513      MOVEM.L (A7)+,D0/A1
+000024B8  4E75                     514      RTS                             RETURN FROM ENDL: SUBROUTINE
+000024BA                           515  
+000024BA                           516  *-------------------------------------------------------
+000024BA                           517  *-------------------SHOP OPTIONS------------------------
+000024BA                           518  *-------------------------------------------------------
+000024BA                           519  SHOP:
+000024BA  6100 028A                520      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+000024BE  43F9 00002FF0            521      LEA     SHOP_WELCOME,A1         DISPLAYS THE SHOP MESSAGE MESSAGE
+000024C4  103C 000E                522      MOVE.B  #14,D0
+000024C8  4E4F                     523      TRAP    #15
+000024CA  61D8                     524      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000024CC  6196                     525      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000024CE  6100 FD16                526      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+000024D2  61D0                     527      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000024D4  618E                     528      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000024D6  61CC                     529      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000024D8  6100 FCEE                530      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+000024DC  6186                     531      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000024DE  61C4                     532      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000024E0  6100 0004                533      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+000024E4  4E75                     534      RTS                             RETURN FROM SHOP: SUBROUTINE
+000024E6                           535      
+000024E6                           536  SHOP_MESSAGE:
+000024E6  43F9 00003263            537      LEA     PRICE_MSG,A1            DISPLAYS THE PRICE MESSAGE
+000024EC  103C 000E                538      MOVE.B  #14,D0
+000024F0  4E4F                     539      TRAP    #15
+000024F2  103C 0004                540      MOVE.B  #4,D0                   READ A NUMBER FROM THE KEYBOARD
+000024F6  4E4F                     541      TRAP    #15
+000024F8                           542      
+000024F8  3001                     543      MOVE    D1,D0                   GETS INPUT FROM PLAYER AND LETS BUY STUFF
+000024FA  B27C 0001                544      CMP     #1,D1
+000024FE  6600 0060                545      BNE     WEAPON_ITEM             IF OPTION 1 NOT CHOSEN, MOVES TO OPTION 2
+00002502                           546      
+00002502  183C 000A                547      MOVE.B  #POTION_PRICE,D4        
+00002506  1C16                     548      MOVE.B  (A6),D6                 INDIRECT ADDRESSING
+00002508  BC44                     549      CMP     D4,D6
+0000250A  6C00 0248                550      BGE     ADD_POTION              IF MONEY IS GREATER OR EQUAL TO PRICE OF POTION,CAN BUY POTION
+0000250E  43F9 00003474            551      LEA     NO_MONEY_POTION,A1      DISPLAYS THE NO MONEY FOR POTION MESSAGE
+00002514  103C 000E                552      MOVE.B  #14,D0
+00002518  4E4F                     553      TRAP    #15
+0000251A  43F9 00002CE4            554      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
+00002520  103C 000E                555      MOVE.B  #14,D0 
+00002524  4E4F                     556      TRAP    #15
+00002526  103C 0004                557      MOVE.B  #4,D0                   READ A NUMBER FROM THE KEYBOARD
+0000252A  4E4F                     558      TRAP    #15
+0000252C  6100 0218                559      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+00002530  6100 FF32                560      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002534  6100 FCB0                561      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+00002538  6100 FF6A                562      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000253C  6100 FF26                563      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002540  6100 FF62                564      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002544  6100 FC82                565      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+00002548  6100 FCB4                566      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+0000254C  6100 FCD0                567      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+00002550  6100 FCEC                568      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+00002554  6100 FD08                569      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+00002558  6100 FC02                570      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+0000255C  6188                     571      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+0000255E  4E75                     572      RTS                             RETURN FROM SHOP_MESSAGE: SUBROUTINE               
+00002560                           573      
+00002560                           574  WEAPON_ITEM:
+00002560  B27C 0002                575      CMP     #2,D1
+00002564  6600 006C                576      BNE     WINDMILL_ITEM
+00002568                           577      
+00002568  1A3C 0064                578      MOVE.B  #WEAPON_PRICE,D5
+0000256C  1C16                     579      MOVE.B  (A6),D6                 INDIRECT ADDRESSING
+0000256E  1815                     580      MOVE.B  (A5),D4                 INDIRECT ADDRESSING
+00002570  B87C 0003                581      CMP     #MAX_WEAPON_LEVEL,D4
+00002574  6700 019A                582      BEQ     MAX_LEVEL               IF MONEY IS EQUAL TO MAX NUMBER OF UPGRADES, CAN'T BUY WEAPON UPGRADE
+00002578  BC45                     583      CMP     D5,D6
+0000257A  6C00 0226                584      BGE     ADD_WEAPON              IF MONEY IS GREATER OR EQUAL TO PRICE OF WEAPON,CAN BUY WEAPON UPGRADE
+0000257E  43F9 0000349B            585      LEA     NO_MONEY_WEAPON,A1      DISPLAYS THE NO MONEY FOR WEAPON UPGRADE MESSAGE
+00002584  103C 000E                586      MOVE.B  #14,D0
+00002588  4E4F                     587      TRAP    #15
+0000258A  43F9 00002CE4            588      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
+00002590  103C 000E                589      MOVE.B  #14,D0 
+00002594  4E4F                     590      TRAP    #15
+00002596  103C 0004                591      MOVE.B  #4,D0                   READ A NUMBER FROM THE KEYBOARD
+0000259A  4E4F                     592      TRAP    #15
+0000259C  6100 01A8                593      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+000025A0  6100 FEC2                594      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000025A4  6100 FC40                595      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+000025A8  6100 FEFA                596      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000025AC  6100 FEB6                597      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000025B0  6100 FEF2                598      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000025B4  6100 FC12                599      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+000025B8  6100 FC44                600      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+000025BC  6100 FC60                601      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+000025C0  6100 FC7C                602      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+000025C4  6100 FC98                603      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+000025C8  6100 FB92                604      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+000025CC  6100 FF18                605      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+000025D0  4E75                     606      RTS                             RETURN FROM WEAPON_ITEM: SUBROUTINE
+000025D2                           607   
+000025D2                           608  WINDMILL_ITEM:
+000025D2  B27C 0003                609      CMP     #3,D1
+000025D6  6600 0064                610      BNE     SOLAR_PANEL_ITEM
+000025DA                           611  
+000025DA  1A3C 004B                612      MOVE.B  #WINDMILL_PRICE,D5
+000025DE  1C16                     613      MOVE.B  (A6),D6                 INDIRECT ADDRESSING
+000025E0  1815                     614      MOVE.B  (A5),D4                 INDIRECT ADDRESSING
+000025E2  BC45                     615      CMP     D5,D6
+000025E4  6C00 020A                616      BGE     ADD_WINDMILL            IF MONEY IS GREATER OR EQUAL TO PRICE OF WINDMILL,CAN BUY
+000025E8  43F9 000034CA            617      LEA     NO_MONEY_WINDMILL,A1    DISPLAYS THE NO MONEY FOR WINDMILL MESSAGE
+000025EE  103C 000E                618      MOVE.B  #14,D0                  READ A NUMBER FROM THE KEYBOARD
+000025F2  4E4F                     619      TRAP    #15
+000025F4  43F9 00002CE4            620      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
+000025FA  103C 000E                621      MOVE.B  #14,D0                  
+000025FE  4E4F                     622      TRAP    #15
+00002600  103C 0004                623      MOVE.B  #4,D0                   READ A NUMBER FROM THE KEYBOARD
+00002604  4E4F                     624      TRAP    #15
+00002606  6100 013E                625      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+0000260A  6100 FE58                626      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+0000260E  6100 FBD6                627      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+00002612  6100 FE90                628      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002616  6100 FE4C                629      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+0000261A  6100 FE88                630      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000261E  6100 FBA8                631      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+00002622  6100 FBDA                632      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE  
+00002626  6100 FBF6                633      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE    
+0000262A  6100 FC12                634      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+0000262E  6100 FC2E                635      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+00002632  6100 FB28                636      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE         
+00002636  6100 FEAE                637      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+0000263A  4E75                     638      RTS                             RETURN FROM WINDMILL_ITEM: SUBROUTINE           
+0000263C                           639      
+0000263C                           640  SOLAR_PANEL_ITEM:
+0000263C  B27C 0004                641      CMP     #4,D1
+00002640  6600 0064                642      BNE     TREE_ITEM
+00002644                           643  
+00002644  1A3C 0032                644      MOVE.B  #SOLARPANEL_PRICE,D5
+00002648  1C16                     645      MOVE.B  (A6),D6                 INDIRECT ADDRESSING
+0000264A  1815                     646      MOVE.B  (A5),D4                 INDIRECT ADDRESSING
+0000264C  BC45                     647      CMP     D5,D6
+0000264E  6C00 01F6                648      BGE     ADD_SOLARPANEL          IF MONEY IS GREATER OR EQUAL TO PRICE OF SOLAR PANEL,CAN BUY
+00002652  43F9 000034F3            649      LEA     NO_MONEY_SOLARPANEL,A1  DISPLAYS THE NO MONEY FOR SOLAR PANEL MESSAGE
+00002658  103C 000E                650      MOVE.B  #14,D0                  
+0000265C  4E4F                     651      TRAP    #15
+0000265E  43F9 00002CE4            652      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
+00002664  103C 000E                653      MOVE.B  #14,D0                  
+00002668  4E4F                     654      TRAP    #15
+0000266A  103C 0004                655      MOVE.B  #4,D0                   READ A NUMBER FROM THE KEYBOARD
+0000266E  4E4F                     656      TRAP    #15
+00002670  6100 00D4                657      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+00002674  6100 FDEE                658      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002678  6100 FB6C                659      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+0000267C  6100 FE26                660      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002680  6100 FDE2                661      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002684  6100 FE1E                662      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002688  6100 FB3E                663      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+0000268C  6100 FB70                664      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+00002690  6100 FB8C                665      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE  
+00002694  6100 FBA8                666      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+00002698  6100 FBC4                667      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+0000269C  6100 FABE                668      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE          
+000026A0  6100 FE44                669      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+000026A4  4E75                     670      RTS                             RETURN FROM SOLAR_PANEL_ITEM: SUBROUTINE
+000026A6                           671      
+000026A6                           672  TREE_ITEM:
+000026A6  B27C 0005                673      CMP     #5,D1
+000026AA  6600 F954                674      BNE     GAME
+000026AE                           675  
+000026AE  1A3C 0019                676      MOVE.B  #TREES_PRICE,D5         
+000026B2  1C16                     677      MOVE.B  (A6),D6                 INDIRECT ADDRESSING
+000026B4  1815                     678      MOVE.B  (A5),D4                 INDIRECT ADDRESSING
+000026B6  BC45                     679      CMP     D5,D6
+000026B8  6C00 01E2                680      BGE     ADD_TREES               IF MONEY IS GREATER OR EQUAL TO PRICE OF TREE,CAN BUY
+000026BC  43F9 0000351F            681      LEA     NO_MONEY_TREES,A1       DISPLAYS THE NO MONEY FOR TREES MESSAGE
+000026C2  103C 000E                682      MOVE.B  #14,D0                  
+000026C6  4E4F                     683      TRAP    #15
+000026C8  43F9 00002CE4            684      LEA     CLICK_ENTER,A1          DISPLAYS THE CLICK ENTER MESSAGE
+000026CE  103C 000E                685      MOVE.B  #14,D0                  
+000026D2  4E4F                     686      TRAP    #15
+000026D4  103C 0004                687      MOVE.B  #4,D0                   READ A NUMBER FROM THE KEYBOARD
+000026D8  4E4F                     688      TRAP    #15
+000026DA  6100 006A                689      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+000026DE  6100 FD84                690      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000026E2  6100 FB02                691      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+000026E6  6100 FDBC                692      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000026EA  6100 FD78                693      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000026EE  6100 FDB4                694      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000026F2  6100 FAD4                695      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+000026F6  6100 FB06                696      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+000026FA  6100 FB22                697      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+000026FE  6100 FB3E                698      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+00002702  6100 FB5A                699      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+00002706  6100 FA54                700      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE         
+0000270A  6100 FDDA                701      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+0000270E  4E75                     702      RTS                             RETURN FROM TREE_ITEM: SUBROUTINE
+00002710                           703      
+00002710                           704  MAX_LEVEL:
+00002710  6100 0034                705      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+00002714  6100 FD4E                706      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002718  6100 FD8A                707      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000271C  43F9 00003441            708      LEA     MAX_UPGRADE,A1          DISPLAYS THE MAX UPGRADE MESSAGE
+00002722  103C 000E                709      MOVE.B  #14,D0                  
+00002726  4E4F                     710      TRAP    #15
+00002728  6100 FA9E                711      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+0000272C  6100 FAD0                712      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE
+00002730  6100 FAEC                713      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+00002734  6100 FB08                714      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+00002738  6100 FB24                715      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+0000273C  6100 FA1E                716      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+00002740  6100 FDA4                717      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+00002744  4E75                     718      RTS                             RETURN FROM MAX_LEVEL: SUBROUTINE
+00002746                           719      
+00002746                           720  CLEAR_SCREEN:
+00002746  323C FF00                721      MOVE.W      #$FF00,d1           CLEAR SCREEN
+0000274A  700B                     722      MOVEQ       #11,d0          
+0000274C  4E4F                     723      TRAP        #15
+0000274E  323C 0000                724      MOVE.W      #0,d1               PUT 0 INTO D1 SO IT DOESNT AFFECT ANY STORED DATA
+00002752  4E75                     725      RTS                             RETURN FROM CLEAR_SCREEN: SUBROUTINE
+00002754                           726  
 00002754                           727  
-00002754                           728  
-00002754                           729  *-------------------------------------------------------
-00002754                           730  *--------------------ADD RESOURCES----------------------
-00002754                           731  *-------------------------------------------------------
-00002754                           732  ADD_POTION:
-00002754  61F0                     733      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-00002756  5213                     734      ADD.B   #1,(A3)
-00002758  0416 000A                735      SUB.B   #POTION_PRICE,(A6)
-0000275C  6100 FD06                736      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002760  6100 FD42                737      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002764  43F9 00003544            738      LEA     BOUGHT_POTION,A1        DISPLAYS THE BOUGHT POTION MESSAGE
-0000276A  103C 000E                739      MOVE.B  #14,D0
-0000276E  4E4F                     740      TRAP    #15
-00002770  6100 FD32                741      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002774  6100 FCEE                742      BSR     DECORATE
-00002778  6100 FA6C                743      BSR     TEMPERATURE
-0000277C  6100 FD26                744      BSR     ENDL
-00002780  6100 FA46                745      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-00002784  6100 FA78                746      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
-00002788  6100 FA94                747      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-0000278C  6100 FAB0                748      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-00002790  6100 FACC                749      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-00002794  6100 F9C6                750      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-00002798  6100 FD0A                751      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000279C  6100 FD48                752      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-000027A0  4E75                     753      RTS                             RETURN FROM ADD_POTION: SUBROUTINE
-000027A2                           754     
-000027A2                           755  ADD_WEAPON:                         
-000027A2  61A2                     756      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-000027A4  5215                     757      ADD.B   #1,(A5)
-000027A6  0416 0064                758      SUB.B   #WEAPON_PRICE,(A6)
-000027AA  6100 FCB8                759      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-000027AE  6100 FCF4                760      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000027B2  43F9 00003568            761      LEA     BOUGHT_WEAPON,A1        DISPLAYS THE BOUGHT WEAPON MESSAGE
-000027B8  103C 000E                762      MOVE.B  #14,D0
-000027BC  4E4F                     763      TRAP    #15
-000027BE  6100 FCE4                764      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000027C2  6100 FCA0                765      BSR     DECORATE
-000027C6  6100 FA1E                766      BSR     TEMPERATURE
-000027CA  6100 FCD8                767      BSR     ENDL
-000027CE  6100 F9F8                768      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-000027D2  6100 FA2A                769      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
-000027D6  6100 FA46                770      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-000027DA  6100 FA62                771      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-000027DE  6100 FA7E                772      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-000027E2  6100 F978                773      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-000027E6  6100 FCBC                774      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000027EA  6100 FCFA                775      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-000027EE  4E75                     776      RTS                             RETURN FROM ADD_WEAPON: SUBROUTINE
-000027F0                           777      
-000027F0                           778  ADD_WINDMILL:
-000027F0  6100 FF54                779      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-000027F4  5238 0FD0                780      ADD.B   #1,(4048)
-000027F8  0416 0064                781      SUB.B   #WINDMILL_PRICE,(A6)
-000027FC  6100 FC66                782      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002800  6100 FCA2                783      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002804  43F9 00003594            784      LEA     BOUGHT_WINDMILL,A1      DISPLAYS THE BOUGHT WINDMILL MESSAGE
-0000280A  103C 000E                785      MOVE.B  #14,D0
-0000280E  4E4F                     786      TRAP    #15
-00002810  5338 0FEE                787      SUB.B   #1,4078                 REMOVE 1 DEGREES CELSIUS TO THE TEMPERATURE
-00002814  6100 FC8E                788      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002818  6100 FC4A                789      BSR     DECORATE
-0000281C  6100 F9C8                790      BSR     TEMPERATURE
-00002820  6100 FC82                791      BSR     ENDL
-00002824  6100 F9A2                792      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-00002828  6100 F9D4                793      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
-0000282C  6100 F9F0                794      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-00002830  6100 FA0C                795      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-00002834  6100 FA28                796      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-00002838  6100 F922                797      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-0000283C  6100 FC66                798      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002840  6100 FCA4                799      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-00002844  4E75                     800      RTS                             RETURN FROM ADD_WINDMILL: SUBROUTINE
-00002846                           801      
-00002846                           802  ADD_SOLARPANEL:
-00002846  6100 FEFE                803      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-0000284A  5238 0FDA                804      ADD.B   #1,(4058)
-0000284E  0416 0032                805      SUB.B   #SOLARPANEL_PRICE,(A6)
-00002852  6100 FC10                806      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-00002856  6100 FC4C                807      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000285A  43F9 000035EF            808      LEA     BOUGHT_SOLARPANEL,A1    DISPLAYS THE BOUGHT SOLAR PANEL MESSAGE
-00002860  103C 000E                809      MOVE.B  #14,D0
-00002864  4E4F                     810      TRAP    #15
-00002866  5338 0FEE                811      SUB.B   #1,4078                 REMOVE 1 DEGREES CELSIUS TO THE TEMPERATURE
-0000286A  6100 FC38                812      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-0000286E  6100 FBF4                813      BSR     DECORATE
-00002872  6100 F972                814      BSR     TEMPERATURE
-00002876  6100 FC2C                815      BSR     ENDL
-0000287A  6100 F94C                816      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-0000287E  6100 F97E                817      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
-00002882  6100 F99A                818      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-00002886  6100 F9B6                819      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-0000288A  6100 F9D2                820      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-0000288E  6100 F8CC                821      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-00002892  6100 FC10                822      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-00002896  6100 FC4E                823      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-0000289A  4E75                     824      RTS                             RETURN FROM ADD_SOLARPANEL: SUBROUTINE
-0000289C                           825  
-0000289C                           826  ADD_TREES:
-0000289C  6100 FEA8                827      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
-000028A0  5238 0FE4                828      ADD.B   #1,(4068)
-000028A4  0416 0019                829      SUB.B   #TREES_PRICE,(A6)
-000028A8  6100 FBBA                830      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
-000028AC  6100 FBF6                831      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000028B0  43F9 0000364D            832      LEA     BOUGHT_TREES,A1         DISPLAYS THE BOUGHT TREES MESSAGE
-000028B6  103C 000E                833      MOVE.B  #14,D0
-000028BA  4E4F                     834      TRAP    #15
-000028BC  5338 0FEE                835      SUB.B   #1,4078                 REMOVE 1 DEGREES CELSIUS TO THE TEMPERATURE
-000028C0  6100 FBE2                836      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000028C4  6100 FB9E                837      BSR     DECORATE
-000028C8  6100 F91C                838      BSR     TEMPERATURE
-000028CC  6100 FBD6                839      BSR     ENDL
-000028D0  6100 F8F6                840      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
-000028D4  6100 F928                841      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
-000028D8  6100 F944                842      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
-000028DC  6100 F960                843      BSR     TREES                   BRANCH TO TREES SUBROUTINE
-000028E0  6100 F97C                844      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
-000028E4  6100 F876                845      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
-000028E8  6100 FBBA                846      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
-000028EC  6100 FBF8                847      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
-000028F0  4E75                     848      RTS                             RETURN FROM ADD_TREES: SUBROUTINE  
-000028F2                           849  
-000028F2                           850  *-------------------------------------------------------
-000028F2                           851  *-------------------DATA DELARATIONS--------------------
-000028F2                           852  *-------------------------------------------------------
-000028F2                           853  
-000028F2                           854  *---------------OPENING MESSAGE TO THE GAME-------------
-000028F2= 2A 2A 2A 2A 2A 2A ...    855  WELCOME_MSG:    DC.B    '********************************************************************************'
-00002942= 0D 0A                    856                  DC.B    $0D,$0A
-00002944= 59 6F 75 20 61 72 ...    857                  DC.B    'You are the chosen one! You are the only person that can save the earth' 
-0000298B= 0D 0A                    858                  DC.B    $0D,$0A
-0000298D= 66 72 6F 6D 20 47 ...    859                  DC.B    'from Global Warming. Do not let us down !!!'
-000029B8= 0D 0A                    860                  DC.B    $0D,$0A
-000029BA= 54 68 65 73 65 20 ...    861                  DC.B    'These monsters have sprung out of nowhere... They have destroyed our land, taken'
-00002A0A= 0D 0A                    862                  DC.B    $0D,$0A
-00002A0C= 6F 75 72 20 67 6F ...    863                  DC.B    'our gold and it is time for these monsters to suffer the consequences !!!'
-00002A55= 0D 0A                    864                  DC.B    $0D,$0A
-00002A57= 49 74 20 69 73 20 ...    865                  DC.B    'It is time for you to show us what you are made of.'
-00002A8A= 0D 0A                    866                  DC.B    $0D,$0A
-00002A8C= 0D 0A 00                 867                  DC.B    $0D,$0A,0
-00002A8F= 59 6F 75 72 20 6D ...    868  TO_DO_MSG:      DC.B    'Your mission is straightforward. Complete the quest to earn yourself some'
-00002AD8= 0D 0A                    869                  DC.B    $0D,$0A
-00002ADA= 67 6F 6C 64 2E 20 ...    870                  DC.B    'gold. Afterwards you can go to the shop and buy some windmills, solar'
-00002B1F= 0D 0A                    871                  DC.B    $0D,$0A
-00002B21= 70 61 6E 65 6C 73 ...    872                  DC.B    'panels or trees to save the earth from global warming.'
-00002B57= 0D 0A                    873                  DC.B    $0D,$0A
-00002B59= 2A 2A 2A 2A 2A 2A ...    874                  DC.B    '********************************************************************************'
-00002BA9= 0D 0A                    875                  DC.B    $0D,$0A
-00002BAB= 0D 0A 00                 876                  DC.B    $0D,$0A,0
-00002BAE                           877  *------------------------------------------------------
-00002BAE                           878  
-00002BAE                           879  *---------WINDMILLS,SOLAR PANELS,TREES OWNED-----------
-00002BAE= 57 69 6E 64 6D 69 ...    880  WINDMILL_MSG    DC.B    'Windmills owned:',0
-00002BBF= 53 6F 6C 61 72 20 ...    881  SOLAR_PANEL_MSG DC.B    'Solar Panels owned:',0
-00002BD3= 54 72 65 65 73 20 ...    882  TREES_MSG       DC.B    'Trees owned:',0
-00002BE0                           883  *------------------------------------------------------
-00002BE0                           884  
-00002BE0                           885  *-------------------CHARACTER--------------------------
-00002BE0= 50 6F 74 69 6F 6E ...    886  POTIONS_MSG:    DC.B    'Potions owned:',0                
-00002BEF= 43 75 72 72 65 6E ...    887  WEAPONS_MSG:    DC.B    'Current Weapon Level:',0
-00002C05= 47 6F 6C 64 20 69 ...    888  GOLD_MSG:       DC.B    'Gold in your pouch:',0
-00002C19= 59 6F 75 72 20 48 ...    889  HEALTH_MSG:     DC.B    'Your Health:',0
-00002C26                           890  *------------------------------------------------------
-00002C26                           891  
-00002C26                           892  *-------------------GAMEPLAY---------------------------
-00002C26= 51 75 65 73 74 3A ...    893  QUEST_MSG:          DC.B    'Quest:   The Boss is in your way of saving the Earth from'
-00002C5F= 0D 0A                    894                      DC.B    $0D,$0A
-00002C61= 20 20 20 20 20 20 ...    895                      DC.B    '         global warming!!!'
-00002C7B= 0D 0A                    896                      DC.B    $0D,$0A
-00002C7D= 20 20 20 20 20 20 ...    897                      DC.B    '         Defeat the Boss before he destroys all of the land'
-00002CB8= 0D 0A                    898                      DC.B    $0D,$0A    
-00002CBA= 20 20 20 20 20 20 ...    899                      DC.B    '         and causes the world to end!!!'
-00002CE1= 0D 0A 00                 900                      DC.B    $0D,$0A,0
-00002CE4= 0D 0A                    901  CLICK_ENTER:        DC.B    $0D,$0A
-00002CE6= 43 6C 69 63 6B 20 ...    902                      DC.B    'Click enter to continue'
-00002CFD= 0D 0A 00                 903                      DC.B    $0D,$0A,0
-00002D00= 54 68 65 20 42 6F ...    904  BOSS_MSG:           DC.B    'The Boss used earthquake and dealt 35 damage'
-00002D2C= 0D 0A 00                 905                      DC.B    $0D,$0A,0
-00002D2F= 57 68 61 74 20 77 ...    906  PLAYEROPTION_MSG:   DC.B    'What would you like to do next?'
-00002D4E= 0D 0A                    907                      DC.B    $0D,$0A
-00002D50= 43 6C 69 63 6B 20 ...    908                      DC.B    'Click (1) - Attack  Click (2) - Heal Yourself'
-00002D7D= 0D 0A 00                 909                      DC.B    $0D,$0A,0
-00002D80= 59 6F 75 20 73 74 ...    910  ATTACK_MSG:         DC.B    'You struck the Boss and dealt 25 damage'
-00002DA7= 0D 0A 00                 911                      DC.B    $0D,$0A,0
-00002DAA= 2E 00                    912  LOOP_MSG:           DC.B    '.',0
-00002DAC= 45 6E 74 65 72 20 ...    913  REPLAY_MSG:         DC.B    'Enter (0) to Quit the game or (Any Number) to Replay : ',0
-00002DE4= 0D 0A                    914  FULL_HEALTH:        DC.B    $0D,$0A
-00002DE6= 59 6F 75 72 20 68 ...    915                      DC.B    'Your health is full, choose a different option!'
-00002E15= 0D 0A 00                 916                      DC.B    $0D,$0A,0
-00002E18= 59 6F 75 20 75 73 ...    917  USE_POTION:         DC.B    'You used a potion and gained 60 health'
-00002E3E= 0D 0A 00                 918                      DC.B    $0D,$0A,0
-00002E41= 59 6F 75 20 68 61 ...    919  ZEROPOTION_MSG:     DC.B    'You have no potions left, choose a different option!',0
-00002E76= 42 6F 73 73 20 48 ...    920  SHOW_BOSS_HEALTH:   DC.B    'Boss Health:',0
-00002E83= 45 61 72 74 68 71 ...    921  LOSE_RESOURCES_MSG: DC.B    'Earthquake destroyed 1 Solar Panel, 2 Trees and 1 Windmill'
-00002EBD= 0D 0A 00                 922                      DC.B    $0D,$0A,0                     
-00002EC0= 54 68 65 20 68 61 ...    923  LOSE_MSG:           DC.B    'The has Boss killed you and you Failed the Quest!',0
-00002EF2= 43 6F 6E 67 72 61 ...    924  WIN_MSG:            DC.B    'Congratulation you have defeated the Boss, you may proceed!',0
-00002F2E= 59 6F 75 20 63 6F ...    925  WIN_GOLD_MSG:       DC.B    'You completed the Quest and gained 50 Gold!'
-00002F59= 0D 0A 00                 926                      DC.B    $0D,$0A,0    
-00002F5C= 54 68 65 20 63 75 ...    927  CURRENT_TEMP:       DC.B    'The current Temperature in Degrees Celsius is: ',0
-00002F8C= 54 68 65 20 54 65 ...    928  GAIN_TEMP:          DC.B    'The Temperature went up by 2 Degrees Celsius: '
-00002FBA= 0D 0A 00                 929                      DC.B    $0D,$0A,0
-00002FBD= 54 68 65 20 54 65 ...    930  LOSE_TEMP:          DC.B    'The Temperature went down by 1 Degrees Celsius: '
-00002FED= 0D 0A 00                 931                      DC.B    $0D,$0A,0
-00002FF0                           932  *-------------------------------------------------------
-00002FF0                           933  
-00002FF0                           934  *-----------------------SHOP----------------------------
-00002FF0= 2A 2A 2A 2A 2A 2A ...    935  SHOP_WELCOME:   DC.B    '************************************************************'
-0000302C= 0D 0A                    936                  DC.B    $0D,$0A
-0000302E= 57 65 6C 63 6F 6D ...    937                  DC.B    'Welcome to the shop sir! We have a variety of menu choices'
-00003068= 0D 0A                    938                  DC.B    $0D,$0A
-0000306A= 66 6F 72 20 79 6F ...    939                  DC.B    'for you. If you need any help, just let me know.'
-0000309A= 0D 0A                    940                  DC.B    $0D,$0A
-0000309C= 0D 0A                    941                  DC.B    $0D,$0A
-0000309E= 42 75 79 20 61 20 ...    942                  DC.B    'Buy a windmill,solar panel or tree to decrease the'
-000030D0= 0D 0A                    943                  DC.B    $0D,$0A
-000030D2= 74 65 6D 70 65 72 ...    944                  DC.B    'temperature if it is to high!'
-000030EF= 0D 0A                    945                  DC.B    $0D,$0A
-000030F1= 2A 2A 2A 2A 2A 2A ...    946                  DC.B    '************************************************************'
-0000312D= 0D 0A 00                 947                  DC.B    $0D,$0A,0
-00003130= 2A 2A 2A 2A 2A 2A ...    948  GAME_OPTION:    DC.B    '********************************************************************************'
-00003180= 0D 0A                    949                  DC.B    $0D,$0A
-00003182= 0D 0A                    950                  DC.B    $0D,$0A
-00003184= 57 6F 75 6C 64 20 ...    951                  DC.B    'Would you like to visit the Shop or start your first Quest?'
-000031BF= 0D 0A                    952                  DC.B    $0D,$0A
-000031C1= 0D 0A                    953                  DC.B    $0D,$0A
-000031C3= 2A 2A 2A 2A 2A 2A ...    954                  DC.B    '********************************************************************************'
-00003213= 0D 0A 00                 955                  DC.B    $0D,$0A,0
-00003216= 43 6C 69 63 6B 20 ...    956  GAME_OPTION1:   DC.B    'Click (1) - To enter Shop, Click (Enter)- To proceed into your first Quest'
-00003260= 0D 0A 00                 957                  DC.B    $0D,$0A,0
-00003263= 2A 2A 2A 2A 2A 2A ...    958  PRICE_MSG:      DC.B    '************************************************************'
-0000329F= 0D 0A                    959                  DC.B    $0D,$0A
-000032A1= 2A 2A 2A 20 20 20 ...    960                  DC.B    '***                           MENU                       ***'
-000032DD= 0D 0A                    961                  DC.B    $0D,$0A
-000032DF= 2A 2A 2A 2A 2A 2A ...    962                  DC.B    '************************************************************'
-0000331B= 0D 0A                    963                  DC.B    $0D,$0A
-0000331D= 28 31 29 2D 2D 2D ...    964                  DC.B    '(1)---Health Potion- 10'
-00003334= 0D 0A                    965                  DC.B    $0D,$0A
-00003336= 28 32 29 2D 2D 2D ...    966                  DC.B    '(2)---Sword Upgrade- 100'
-0000334E= 0D 0A                    967                  DC.B    $0D,$0A
-00003350= 28 33 29 2D 2D 2D ...    968                  DC.B    '(3)---WindMill Cost- 100'
-00003368= 0D 0A                    969                  DC.B    $0D,$0A
-0000336A= 28 34 29 2D 2D 2D ...    970                  DC.B    '(4)---Solar Panel Cost- 50'
-00003384= 0D 0A                    971                  DC.B    $0D,$0A
-00003386= 28 35 29 2D 2D 2D ...    972                  DC.B    '(5)---Tree Costs- 25'
-0000339A= 0D 0A                    973                  DC.B    $0D,$0A
-0000339C= 2A 2A 2A 2A 2A 2A ...    974                  DC.B    '************************************************************'
-000033D8= 0D 0A                    975                  DC.B    $0D,$0A
-000033DA= 43 68 6F 6F 73 65 ...    976                  DC.B    'Choose something in the menu between (1-5) or Click Enter - to leave the shop'
-00003427= 0D 0A 00                 977                  DC.B    $0D,$0A,0
-0000342A= 0D 0A                    978  WRONG_OPTION:   DC.B    $0D,$0A
-0000342C= 4F 70 74 69 6F 6E ...    979                  DC.B    'Option Unavailable'
-0000343E= 0D 0A 00                 980                  DC.B    $0D,$0A,0
-00003441= 59 6F 75 20 68 61 ...    981  MAX_UPGRADE:    DC.B    'You have reached the max level for your weapon'
-0000346F= 0D 0A                    982                  DC.B    $0D,$0A
-00003471= 0D 0A 00                 983                  DC.B    $0D,$0A,0                
-00003474                           984  *------------------------------------------------------- 
-00003474                           985  
-00003474                           986  *------Promt for not enough money for certain item------
-00003474= 0D 0A                    987  NO_MONEY_POTION:      DC.B    $0D,$0A
-00003476= 4E 6F 74 20 65 6E ...    988                        DC.B    'Not enough gold to purchase Potion'
-00003498= 0D 0A 00                 989                        DC.B    $0D,$0A,0
-0000349B= 0D 0A                    990  NO_MONEY_WEAPON:      DC.B    $0D,$0A
-0000349D= 4E 6F 74 20 65 6E ...    991                        DC.B    'Not enough gold to purchase Weapon upgrade'
-000034C7= 0D 0A 00                 992                        DC.B    $0D,$0A,0
-000034CA= 0D 0A                    993  NO_MONEY_WINDMILL:    DC.B    $0D,$0A
-000034CC= 4E 6F 74 20 65 6E ...    994                        DC.B    'Not enough gold to purchase Windmill'
-000034F0= 0D 0A 00                 995                        DC.B    $0D,$0A,0
-000034F3= 0D 0A                    996  NO_MONEY_SOLARPANEL:  DC.B    $0D,$0A
-000034F5= 4E 6F 74 20 65 6E ...    997                        DC.B    'Not enough gold to purchase Solar Panel'
-0000351C= 0D 0A 00                 998                        DC.B    $0D,$0A,0
-0000351F= 0D 0A                    999  NO_MONEY_TREES:       DC.B    $0D,$0A
-00003521= 4E 6F 74 20 65 6E ...   1000                        DC.B    'Not enough gold to purchase Tree'
-00003541= 0D 0A 00                1001                        DC.B    $0D,$0A,0
-00003544                          1002  *------------------------------------------------------- 
-00003544                          1003  
-00003544                          1004  *-----------Promt for bought certain item---------------
-00003544= 59 6F 75 20 62 6F ...   1005  BOUGHT_POTION:        DC.B    'You bought a Potion from the shop'
-00003565= 0D 0A 00                1006                        DC.B    $0D,$0A,0
-00003568= 59 6F 75 20 62 6F ...   1007  BOUGHT_WEAPON:        DC.B    'You bought a Weapon upgrade from the shop'
-00003591= 0D 0A 00                1008                        DC.B    $0D,$0A,0
-00003594= 59 6F 75 20 62 6F ...   1009  BOUGHT_WINDMILL:      DC.B    'You bought a Windmill from the shop and decreased the'
-000035C9= 0D 0A                   1010                        DC.B    $0D,$0A
-000035CB= 74 65 6D 70 65 72 ...   1011                        DC.B    'temperature by 1 Degrees Celsius.'
-000035EC= 0D 0A 00                1012                        DC.B    $0D,$0A,0
-000035EF= 59 6F 75 20 62 6F ...   1013  BOUGHT_SOLARPANEL:    DC.B    'You bought a Solar Panel from the shop and decreased the'
-00003627= 0D 0A                   1014                        DC.B    $0D,$0A
-00003629= 74 65 6D 70 65 72 ...   1015                        DC.B    'temperature by 1 Degrees Celsius.'
-0000364A= 0D 0A 00                1016                        DC.B    $0D,$0A,0
-0000364D= 59 6F 75 20 62 6F ...   1017  BOUGHT_TREES:         DC.B    'You bought a Tree from the shop and decreased the'
-0000367E= 0D 0A                   1018                        DC.B    $0D,$0A
-00003680= 74 65 6D 70 65 72 ...   1019                        DC.B    'temperature by 1 Degrees Celsius.'
-000036A1= 0D 0A 00                1020                        DC.B    $0D,$0A,0
-000036A4                          1021  *-------------------------------------------------------
-000036A4                          1022  
-000036A4                          1023  *----------Used for ENDL (skip line in game)------------
-000036A4= 0D 0A 00                1024  CRLF:           DC.B    $0D,$0A,0
-000036A7                          1025  *-------------------------------------------------------
-000036A7                          1026  
-000036A7                          1027                    
-000036A7                          1028  
-000036A7                          1029      END START
+00002754                           728  *-------------------------------------------------------
+00002754                           729  *--------------------ADD RESOURCES----------------------
+00002754                           730  *-------------------------------------------------------
+00002754                           731  ADD_POTION:
+00002754  61F0                     732      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+00002756  5213                     733      ADD.B   #1,(A3)                 ADD 1 TO YOUR POTION AMOUNT
+00002758  0416 000A                734      SUB.B   #POTION_PRICE,(A6)      USED GOLD FOR THE PRICE OF POTION
+0000275C  6100 FD06                735      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002760  6100 FD42                736      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002764  43F9 00003544            737      LEA     BOUGHT_POTION,A1        DISPLAYS THE BOUGHT POTION MESSAGE
+0000276A  103C 000E                738      MOVE.B  #14,D0                  
+0000276E  4E4F                     739      TRAP    #15
+00002770  6100 FD32                740      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002774  6100 FCEE                741      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002778  6100 FA6C                742      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+0000277C  6100 FD26                743      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002780  6100 FA46                744      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+00002784  6100 FA78                745      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+00002788  6100 FA94                746      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+0000278C  6100 FAB0                747      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+00002790  6100 FACC                748      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+00002794  6100 F9C6                749      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+00002798  6100 FD0A                750      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000279C  6100 FD48                751      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+000027A0  4E75                     752      RTS                             RETURN FROM ADD_POTION: SUBROUTINE
+000027A2                           753     
+000027A2                           754  ADD_WEAPON:                         
+000027A2  61A2                     755      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+000027A4  5215                     756      ADD.B   #1,(A5)                 ADD 1 TO YOUR WEAPON LEVEL
+000027A6  0416 0064                757      SUB.B   #WEAPON_PRICE,(A6)      USED GOLD FOR THE PRICE OF WEAPON UPGRADE
+000027AA  6100 FCB8                758      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000027AE  6100 FCF4                759      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000027B2  43F9 00003568            760      LEA     BOUGHT_WEAPON,A1        DISPLAYS THE BOUGHT WEAPON MESSAGE
+000027B8  103C 000E                761      MOVE.B  #14,D0
+000027BC  4E4F                     762      TRAP    #15
+000027BE  6100 FCE4                763      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000027C2  6100 FCA0                764      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000027C6  6100 FA1E                765      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+000027CA  6100 FCD8                766      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000027CE  6100 F9F8                767      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+000027D2  6100 FA2A                768      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+000027D6  6100 FA46                769      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+000027DA  6100 FA62                770      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+000027DE  6100 FA7E                771      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+000027E2  6100 F978                772      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+000027E6  6100 FCBC                773      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000027EA  6100 FCFA                774      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+000027EE  4E75                     775      RTS                             RETURN FROM ADD_WEAPON: SUBROUTINE
+000027F0                           776      
+000027F0                           777  ADD_WINDMILL:
+000027F0  6100 FF54                778      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+000027F4  5238 0FD0                779      ADD.B   #1,(4048)               ADD 1 TO YOUR WINDMILL AMOUNT
+000027F8  0416 004B                780      SUB.B   #WINDMILL_PRICE,(A6)    USED GOLD FOR THE PRICE OF A WINDMILL
+000027FC  6100 FC66                781      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002800  6100 FCA2                782      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002804  43F9 00003594            783      LEA     BOUGHT_WINDMILL,A1      DISPLAYS THE BOUGHT WINDMILL MESSAGE
+0000280A  103C 000E                784      MOVE.B  #14,D0
+0000280E  4E4F                     785      TRAP    #15
+00002810  5538 0FEE                786      SUB.B   #2,4078                 REMOVE 2 DEGREES CELSIUS TO THE TEMPERATURE
+00002814  6100 FC8E                787      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002818  6100 FC4A                788      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+0000281C  6100 F9C8                789      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+00002820  6100 FC82                790      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002824  6100 F9A2                791      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+00002828  6100 F9D4                792      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+0000282C  6100 F9F0                793      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+00002830  6100 FA0C                794      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+00002834  6100 FA28                795      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+00002838  6100 F922                796      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+0000283C  6100 FC66                797      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002840  6100 FCA4                798      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+00002844  4E75                     799      RTS                             RETURN FROM ADD_WINDMILL: SUBROUTINE
+00002846                           800      
+00002846                           801  ADD_SOLARPANEL:
+00002846  6100 FEFE                802      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+0000284A  5238 0FDA                803      ADD.B   #1,(4058)               ADD 1 TO YOUR SOLAR PANEL AMOUNT
+0000284E  0416 0032                804      SUB.B   #SOLARPANEL_PRICE,(A6)  USED GOLD FOR THE PRICE OF A SOLAR PANEL
+00002852  6100 FC10                805      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002856  6100 FC4C                806      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000285A  43F9 000035EF            807      LEA     BOUGHT_SOLARPANEL,A1    DISPLAYS THE BOUGHT SOLAR PANEL MESSAGE
+00002860  103C 000E                808      MOVE.B  #14,D0
+00002864  4E4F                     809      TRAP    #15
+00002866  5338 0FEE                810      SUB.B   #1,4078                 REMOVE 1 DEGREES CELSIUS TO THE TEMPERATURE
+0000286A  6100 FC38                811      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000286E  6100 FBF4                812      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+00002872  6100 F972                813      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+00002876  6100 FC2C                814      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+0000287A  6100 F94C                815      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+0000287E  6100 F97E                816      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+00002882  6100 F99A                817      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+00002886  6100 F9B6                818      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+0000288A  6100 F9D2                819      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+0000288E  6100 F8CC                820      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+00002892  6100 FC10                821      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+00002896  6100 FC4E                822      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+0000289A  4E75                     823      RTS                             RETURN FROM ADD_SOLARPANEL: SUBROUTINE
+0000289C                           824  
+0000289C                           825  ADD_TREES:
+0000289C  6100 FEA8                826      BSR     CLEAR_SCREEN            BRANCH TO CLEAR SCREEN SUBROUTINE
+000028A0  5238 0FE4                827      ADD.B   #1,(4068)               ADD 1 TO YOUR TREES AMOUNT
+000028A4  0416 0019                828      SUB.B   #TREES_PRICE,(A6)       USED GOLD FOR THE PRICE OF A TREE
+000028A8  6100 FBBA                829      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000028AC  6100 FBF6                830      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000028B0  43F9 0000364D            831      LEA     BOUGHT_TREES,A1         DISPLAYS THE BOUGHT TREES MESSAGE
+000028B6  103C 000E                832      MOVE.B  #14,D0
+000028BA  4E4F                     833      TRAP    #15
+000028BC  5338 0FEE                834      SUB.B   #1,4078                 REMOVE 1 DEGREES CELSIUS TO THE TEMPERATURE
+000028C0  6100 FBE2                835      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000028C4  6100 FB9E                836      BSR     DECORATE                BRANCH TO DECORATE SUBROUTINE
+000028C8  6100 F91C                837      BSR     TEMPERATURE             BRANCH TO TEMPERATURE SUBROUTINE
+000028CC  6100 FBD6                838      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000028D0  6100 F8F6                839      BSR     GOLD                    BRANCH TO GOLD SUBROUTINE
+000028D4  6100 F928                840      BSR     WINDMILL                BRANCH TO WINDMILL SUBROUTINE 
+000028D8  6100 F944                841      BSR     SOLAR_PANEL             BRANCH TO SOLAR PANEL SUBROUTINE
+000028DC  6100 F960                842      BSR     TREES                   BRANCH TO TREES SUBROUTINE
+000028E0  6100 F97C                843      BSR     POTIONS                 BRANCH TO POTIONS SUBROUTINE
+000028E4  6100 F876                844      BSR     WEAPONS                 BRANCH TO WEAPONS SUBROUTINE
+000028E8  6100 FBBA                845      BSR     ENDL                    BRANCH TO ENDL SUBROUTINE
+000028EC  6100 FBF8                846      BSR     SHOP_MESSAGE            BRANCH TO SHOP MESSAGE SUBROUTINE
+000028F0  4E75                     847      RTS                             RETURN FROM ADD_TREES: SUBROUTINE  
+000028F2                           848  
+000028F2                           849  *-------------------------------------------------------
+000028F2                           850  *-------------------DATA DELARATIONS--------------------
+000028F2                           851  *-------------------------------------------------------
+000028F2                           852  
+000028F2                           853  *---------------OPENING MESSAGE TO THE GAME-------------
+000028F2= 2A 2A 2A 2A 2A 2A ...    854  WELCOME_MSG:    DC.B    '********************************************************************************'
+00002942= 0D 0A                    855                  DC.B    $0D,$0A
+00002944= 59 6F 75 20 61 72 ...    856                  DC.B    'You are the chosen one! You are the only person that can save the earth' 
+0000298B= 0D 0A                    857                  DC.B    $0D,$0A
+0000298D= 66 72 6F 6D 20 47 ...    858                  DC.B    'from Global Warming. Do not let us down !!!'
+000029B8= 0D 0A                    859                  DC.B    $0D,$0A
+000029BA= 54 68 65 73 65 20 ...    860                  DC.B    'These monsters have sprung out of nowhere... They have destroyed our land, taken'
+00002A0A= 0D 0A                    861                  DC.B    $0D,$0A
+00002A0C= 6F 75 72 20 67 6F ...    862                  DC.B    'our gold and it is time for these monsters to suffer the consequences !!!'
+00002A55= 0D 0A                    863                  DC.B    $0D,$0A
+00002A57= 49 74 20 69 73 20 ...    864                  DC.B    'It is time for you to show us what you are made of.'
+00002A8A= 0D 0A                    865                  DC.B    $0D,$0A
+00002A8C= 0D 0A 00                 866                  DC.B    $0D,$0A,0
+00002A8F= 59 6F 75 72 20 6D ...    867  TO_DO_MSG:      DC.B    'Your mission is straightforward. Complete the quest to earn yourself some'
+00002AD8= 0D 0A                    868                  DC.B    $0D,$0A
+00002ADA= 67 6F 6C 64 2E 20 ...    869                  DC.B    'gold. Afterwards you can go to the shop and buy some windmills, solar'
+00002B1F= 0D 0A                    870                  DC.B    $0D,$0A
+00002B21= 70 61 6E 65 6C 73 ...    871                  DC.B    'panels or trees to save the earth from global warming.'
+00002B57= 0D 0A                    872                  DC.B    $0D,$0A
+00002B59= 2A 2A 2A 2A 2A 2A ...    873                  DC.B    '********************************************************************************'
+00002BA9= 0D 0A                    874                  DC.B    $0D,$0A
+00002BAB= 0D 0A 00                 875                  DC.B    $0D,$0A,0
+00002BAE                           876  *------------------------------------------------------
+00002BAE                           877  
+00002BAE                           878  *---------WINDMILLS,SOLAR PANELS,TREES OWNED-----------
+00002BAE= 57 69 6E 64 6D 69 ...    879  WINDMILL_MSG    DC.B    'Windmills owned:',0
+00002BBF= 53 6F 6C 61 72 20 ...    880  SOLAR_PANEL_MSG DC.B    'Solar Panels owned:',0
+00002BD3= 54 72 65 65 73 20 ...    881  TREES_MSG       DC.B    'Trees owned:',0
+00002BE0                           882  *------------------------------------------------------
+00002BE0                           883  
+00002BE0                           884  *-------------------CHARACTER--------------------------
+00002BE0= 50 6F 74 69 6F 6E ...    885  POTIONS_MSG:    DC.B    'Potions owned:',0                
+00002BEF= 43 75 72 72 65 6E ...    886  WEAPONS_MSG:    DC.B    'Current Weapon Level:',0
+00002C05= 47 6F 6C 64 20 69 ...    887  GOLD_MSG:       DC.B    'Gold in your pouch:',0
+00002C19= 59 6F 75 72 20 48 ...    888  HEALTH_MSG:     DC.B    'Your Health:',0
+00002C26                           889  *------------------------------------------------------
+00002C26                           890  
+00002C26                           891  *-------------------GAMEPLAY---------------------------
+00002C26= 51 75 65 73 74 3A ...    892  QUEST_MSG:          DC.B    'Quest:   The Boss is in your way of saving the Earth from'
+00002C5F= 0D 0A                    893                      DC.B    $0D,$0A
+00002C61= 20 20 20 20 20 20 ...    894                      DC.B    '         global warming!!!'
+00002C7B= 0D 0A                    895                      DC.B    $0D,$0A
+00002C7D= 20 20 20 20 20 20 ...    896                      DC.B    '         Defeat the Boss before he destroys all of the land'
+00002CB8= 0D 0A                    897                      DC.B    $0D,$0A    
+00002CBA= 20 20 20 20 20 20 ...    898                      DC.B    '         and causes the world to end!!!'
+00002CE1= 0D 0A 00                 899                      DC.B    $0D,$0A,0
+00002CE4= 0D 0A                    900  CLICK_ENTER:        DC.B    $0D,$0A
+00002CE6= 43 6C 69 63 6B 20 ...    901                      DC.B    'Click enter to continue'
+00002CFD= 0D 0A 00                 902                      DC.B    $0D,$0A,0
+00002D00= 54 68 65 20 42 6F ...    903  BOSS_MSG:           DC.B    'The Boss used earthquake and dealt 35 damage'
+00002D2C= 0D 0A 00                 904                      DC.B    $0D,$0A,0
+00002D2F= 57 68 61 74 20 77 ...    905  PLAYEROPTION_MSG:   DC.B    'What would you like to do next?'
+00002D4E= 0D 0A                    906                      DC.B    $0D,$0A
+00002D50= 43 6C 69 63 6B 20 ...    907                      DC.B    'Click (1) - Attack  Click (2) - Heal Yourself'
+00002D7D= 0D 0A 00                 908                      DC.B    $0D,$0A,0
+00002D80= 59 6F 75 20 73 74 ...    909  ATTACK_MSG:         DC.B    'You struck the Boss and dealt 25 damage'
+00002DA7= 0D 0A 00                 910                      DC.B    $0D,$0A,0
+00002DAA= 2E 00                    911  LOOP_MSG:           DC.B    '.',0
+00002DAC= 45 6E 74 65 72 20 ...    912  REPLAY_MSG:         DC.B    'Enter (0) to Quit the game or (Any Number) to Replay : ',0
+00002DE4= 0D 0A                    913  FULL_HEALTH:        DC.B    $0D,$0A
+00002DE6= 59 6F 75 72 20 68 ...    914                      DC.B    'Your health is full, choose a different option!'
+00002E15= 0D 0A 00                 915                      DC.B    $0D,$0A,0
+00002E18= 59 6F 75 20 75 73 ...    916  USE_POTION:         DC.B    'You used a potion and gained 60 health'
+00002E3E= 0D 0A 00                 917                      DC.B    $0D,$0A,0
+00002E41= 59 6F 75 20 68 61 ...    918  ZEROPOTION_MSG:     DC.B    'You have no potions left, choose a different option!',0
+00002E76= 42 6F 73 73 20 48 ...    919  SHOW_BOSS_HEALTH:   DC.B    'Boss Health:',0
+00002E83= 45 61 72 74 68 71 ...    920  LOSE_RESOURCES_MSG: DC.B    'Earthquake destroyed 1 Solar Panel, 2 Trees and 1 Windmill'
+00002EBD= 0D 0A 00                 921                      DC.B    $0D,$0A,0                     
+00002EC0= 54 68 65 20 68 61 ...    922  LOSE_MSG:           DC.B    'The has Boss killed you and you Failed the Quest!',0
+00002EF2= 43 6F 6E 67 72 61 ...    923  WIN_MSG:            DC.B    'Congratulation you have defeated the Boss, you may proceed!',0
+00002F2E= 59 6F 75 20 63 6F ...    924  WIN_GOLD_MSG:       DC.B    'You completed the Quest and gained 50 Gold!'
+00002F59= 0D 0A 00                 925                      DC.B    $0D,$0A,0    
+00002F5C= 54 68 65 20 63 75 ...    926  CURRENT_TEMP:       DC.B    'The current Temperature in Degrees Celsius is: ',0
+00002F8C= 54 68 65 20 54 65 ...    927  GAIN_TEMP:          DC.B    'The Temperature went up by 2 Degrees Celsius: '
+00002FBA= 0D 0A 00                 928                      DC.B    $0D,$0A,0
+00002FBD= 54 68 65 20 54 65 ...    929  LOSE_TEMP:          DC.B    'The Temperature went down by 1 Degrees Celsius: '
+00002FED= 0D 0A 00                 930                      DC.B    $0D,$0A,0
+00002FF0                           931  *-------------------------------------------------------
+00002FF0                           932  
+00002FF0                           933  *-----------------------SHOP----------------------------
+00002FF0= 2A 2A 2A 2A 2A 2A ...    934  SHOP_WELCOME:   DC.B    '************************************************************'
+0000302C= 0D 0A                    935                  DC.B    $0D,$0A
+0000302E= 57 65 6C 63 6F 6D ...    936                  DC.B    'Welcome to the shop sir! We have a variety of menu choices'
+00003068= 0D 0A                    937                  DC.B    $0D,$0A
+0000306A= 66 6F 72 20 79 6F ...    938                  DC.B    'for you. If you need any help, just let me know.'
+0000309A= 0D 0A                    939                  DC.B    $0D,$0A
+0000309C= 0D 0A                    940                  DC.B    $0D,$0A
+0000309E= 42 75 79 20 61 20 ...    941                  DC.B    'Buy a windmill,solar panel or tree to decrease the'
+000030D0= 0D 0A                    942                  DC.B    $0D,$0A
+000030D2= 74 65 6D 70 65 72 ...    943                  DC.B    'temperature if it is to high!'
+000030EF= 0D 0A                    944                  DC.B    $0D,$0A
+000030F1= 2A 2A 2A 2A 2A 2A ...    945                  DC.B    '************************************************************'
+0000312D= 0D 0A 00                 946                  DC.B    $0D,$0A,0
+00003130= 2A 2A 2A 2A 2A 2A ...    947  GAME_OPTION:    DC.B    '********************************************************************************'
+00003180= 0D 0A                    948                  DC.B    $0D,$0A
+00003182= 0D 0A                    949                  DC.B    $0D,$0A
+00003184= 57 6F 75 6C 64 20 ...    950                  DC.B    'Would you like to visit the Shop or start your first Quest?'
+000031BF= 0D 0A                    951                  DC.B    $0D,$0A
+000031C1= 0D 0A                    952                  DC.B    $0D,$0A
+000031C3= 2A 2A 2A 2A 2A 2A ...    953                  DC.B    '********************************************************************************'
+00003213= 0D 0A 00                 954                  DC.B    $0D,$0A,0
+00003216= 43 6C 69 63 6B 20 ...    955  GAME_OPTION1:   DC.B    'Click (1) - To enter Shop, Click (Enter)- To proceed into your first Quest'
+00003260= 0D 0A 00                 956                  DC.B    $0D,$0A,0
+00003263= 2A 2A 2A 2A 2A 2A ...    957  PRICE_MSG:      DC.B    '************************************************************'
+0000329F= 0D 0A                    958                  DC.B    $0D,$0A
+000032A1= 2A 2A 2A 20 20 20 ...    959                  DC.B    '***                           MENU                       ***'
+000032DD= 0D 0A                    960                  DC.B    $0D,$0A
+000032DF= 2A 2A 2A 2A 2A 2A ...    961                  DC.B    '************************************************************'
+0000331B= 0D 0A                    962                  DC.B    $0D,$0A
+0000331D= 28 31 29 2D 2D 2D ...    963                  DC.B    '(1)---Health Potion- 10'
+00003334= 0D 0A                    964                  DC.B    $0D,$0A
+00003336= 28 32 29 2D 2D 2D ...    965                  DC.B    '(2)---Sword Upgrade- 100'
+0000334E= 0D 0A                    966                  DC.B    $0D,$0A
+00003350= 28 33 29 2D 2D 2D ...    967                  DC.B    '(3)---WindMill Cost- 100'
+00003368= 0D 0A                    968                  DC.B    $0D,$0A
+0000336A= 28 34 29 2D 2D 2D ...    969                  DC.B    '(4)---Solar Panel Cost- 50'
+00003384= 0D 0A                    970                  DC.B    $0D,$0A
+00003386= 28 35 29 2D 2D 2D ...    971                  DC.B    '(5)---Tree Costs- 25'
+0000339A= 0D 0A                    972                  DC.B    $0D,$0A
+0000339C= 2A 2A 2A 2A 2A 2A ...    973                  DC.B    '************************************************************'
+000033D8= 0D 0A                    974                  DC.B    $0D,$0A
+000033DA= 43 68 6F 6F 73 65 ...    975                  DC.B    'Choose something in the menu between (1-5) or Click Enter - to leave the shop'
+00003427= 0D 0A 00                 976                  DC.B    $0D,$0A,0
+0000342A= 0D 0A                    977  WRONG_OPTION:   DC.B    $0D,$0A
+0000342C= 4F 70 74 69 6F 6E ...    978                  DC.B    'Option Unavailable'
+0000343E= 0D 0A 00                 979                  DC.B    $0D,$0A,0
+00003441= 59 6F 75 20 68 61 ...    980  MAX_UPGRADE:    DC.B    'You have reached the max level for your weapon'
+0000346F= 0D 0A                    981                  DC.B    $0D,$0A
+00003471= 0D 0A 00                 982                  DC.B    $0D,$0A,0                
+00003474                           983  *------------------------------------------------------- 
+00003474                           984  
+00003474                           985  *------Promt for not enough money for certain item------
+00003474= 0D 0A                    986  NO_MONEY_POTION:      DC.B    $0D,$0A
+00003476= 4E 6F 74 20 65 6E ...    987                        DC.B    'Not enough gold to purchase Potion'
+00003498= 0D 0A 00                 988                        DC.B    $0D,$0A,0
+0000349B= 0D 0A                    989  NO_MONEY_WEAPON:      DC.B    $0D,$0A
+0000349D= 4E 6F 74 20 65 6E ...    990                        DC.B    'Not enough gold to purchase Weapon upgrade'
+000034C7= 0D 0A 00                 991                        DC.B    $0D,$0A,0
+000034CA= 0D 0A                    992  NO_MONEY_WINDMILL:    DC.B    $0D,$0A
+000034CC= 4E 6F 74 20 65 6E ...    993                        DC.B    'Not enough gold to purchase Windmill'
+000034F0= 0D 0A 00                 994                        DC.B    $0D,$0A,0
+000034F3= 0D 0A                    995  NO_MONEY_SOLARPANEL:  DC.B    $0D,$0A
+000034F5= 4E 6F 74 20 65 6E ...    996                        DC.B    'Not enough gold to purchase Solar Panel'
+0000351C= 0D 0A 00                 997                        DC.B    $0D,$0A,0
+0000351F= 0D 0A                    998  NO_MONEY_TREES:       DC.B    $0D,$0A
+00003521= 4E 6F 74 20 65 6E ...    999                        DC.B    'Not enough gold to purchase Tree'
+00003541= 0D 0A 00                1000                        DC.B    $0D,$0A,0
+00003544                          1001  *------------------------------------------------------- 
+00003544                          1002  
+00003544                          1003  *-----------Promt for bought certain item---------------
+00003544= 59 6F 75 20 62 6F ...   1004  BOUGHT_POTION:        DC.B    'You bought a Potion from the shop'
+00003565= 0D 0A 00                1005                        DC.B    $0D,$0A,0
+00003568= 59 6F 75 20 62 6F ...   1006  BOUGHT_WEAPON:        DC.B    'You bought a Weapon upgrade from the shop'
+00003591= 0D 0A 00                1007                        DC.B    $0D,$0A,0
+00003594= 59 6F 75 20 62 6F ...   1008  BOUGHT_WINDMILL:      DC.B    'You bought a Windmill from the shop and decreased the'
+000035C9= 0D 0A                   1009                        DC.B    $0D,$0A
+000035CB= 74 65 6D 70 65 72 ...   1010                        DC.B    'temperature by 2 Degrees Celsius.'
+000035EC= 0D 0A 00                1011                        DC.B    $0D,$0A,0
+000035EF= 59 6F 75 20 62 6F ...   1012  BOUGHT_SOLARPANEL:    DC.B    'You bought a Solar Panel from the shop and decreased the'
+00003627= 0D 0A                   1013                        DC.B    $0D,$0A
+00003629= 74 65 6D 70 65 72 ...   1014                        DC.B    'temperature by 1 Degrees Celsius.'
+0000364A= 0D 0A 00                1015                        DC.B    $0D,$0A,0
+0000364D= 59 6F 75 20 62 6F ...   1016  BOUGHT_TREES:         DC.B    'You bought a Tree from the shop and decreased the'
+0000367E= 0D 0A                   1017                        DC.B    $0D,$0A
+00003680= 74 65 6D 70 65 72 ...   1018                        DC.B    'temperature by 1 Degrees Celsius.'
+000036A1= 0D 0A 00                1019                        DC.B    $0D,$0A,0
+000036A4                          1020  *-------------------------------------------------------
+000036A4                          1021  
+000036A4                          1022  *----------Used for ENDL (skip line in game)------------
+000036A4= 0D 0A 00                1023  CRLF:           DC.B    $0D,$0A,0
+000036A7                          1024  *-------------------------------------------------------
+000036A7                          1025  
+000036A7                          1026                    
+000036A7                          1027  
+000036A7                          1028      END START
 
 No errors detected
 No warnings generated
@@ -1073,7 +1072,7 @@ GAME_OPTION         3130
 GAME_OPTION1        3216
 GLOBAL_TEMPERATURE  14
 GOLD                21C8
-GOLD_AMOUNT         64
+GOLD_AMOUNT         0
 GOLD_MSG            2C05
 HEALTH              64
 HEALTH_MSG          2C19
@@ -1135,7 +1134,7 @@ WINDMILL            21FE
 WINDMILL_AMOUNT     A
 WINDMILL_ITEM       25D2
 WINDMILL_MSG        2BAE
-WINDMILL_PRICE      64
+WINDMILL_PRICE      4B
 WIN_FIGHT           23B8
 WIN_GOLD_MSG        2F2E
 WIN_MSG             2EF2
